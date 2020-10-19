@@ -7,6 +7,7 @@ router.get('/seedsapi/new-user', (req, res) => {
 
 router.post('/seedsapi/post-video', (req, res) => {
     console.log('Posted video to server');
+    console.log(1);
     res.json({ postedVideo: true });
 })
 
