@@ -1,0 +1,41 @@
+.LessonItem {
+    width: 100%;
+    margin: 6px 0;
+    background-color: lightgray;
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.23s ease-out;
+}
+
+.LessonItem p {
+    margin: 0 0 0 8px;
+    padding: 0;
+}
+
+.OptionsContainer {
+    position: absolute;
+    right: 4px;
+    top: auto;
+    transition: all 0.18s ease-out;
+}
+
+.TitleInput {
+    margin: 0 0 0 8px;
+    padding: 8px;
+    background-color: lightgray;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 3px;
+    font-family: inherit;
+    width: 70%;
+}
+
+.TitleInput:focus {
+    outline: none;
+    box-shadow: 1px 3px 3px gray;
+}

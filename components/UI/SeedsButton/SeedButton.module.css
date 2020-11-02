@@ -1,0 +1,40 @@
+.SeedingSVG {
+    height: 30px;
+}
+
+.Button {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 2px;
+    color: black;
+    font-weight: 700;
+    font-family: 'Montserrat';
+    cursor: pointer;
+    text-transform: uppercase;
+    margin: 16px;
+    /* transition: all 0.2s ease-out; */
+}
+
+.Button:hover {
+    animation-name: buttonGrow;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes buttonGrow {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.04);
+    }
+}
+
+.Button p {
+    margin: 0 0 0 0px;
+}

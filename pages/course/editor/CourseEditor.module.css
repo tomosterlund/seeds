@@ -1,0 +1,47 @@
+.CourseEditor {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.CoursePresentation {
+    width: 80%;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0 0 0;
+}
+
+.CourseImage {
+    background-size: cover;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    margin: 0;
+}
+
+.PresentationTexts {
+    margin: 0 0 0 8px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.PresentationTexts p {
+    text-transform: uppercase;
+    font-size: 13px;
+    color: rgb(87, 81, 81);
+    margin: 0;
+}
+
+.PresentationTexts h2 {
+    margin: 0;
+}
+
+.LessonItem {
+    display: flex;
+    align-items: center;
+}

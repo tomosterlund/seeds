@@ -1,5 +1,29 @@
 .Header {
     width: 100vw;
     height: 50px;
-    box-shadow: 0px 1px 4px rgb(192, 185, 185);
+    box-shadow: 0px 1px 6px rgb(110, 107, 107);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    margin: 0;
+}
+
+.LogoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.LogoContainer img {
+    height: 35px;
+}
+
+.Header h1 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: auto 16px;
+}
+
+.MenuIcon {
+    cursor: pointer;
 }

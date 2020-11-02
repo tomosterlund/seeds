@@ -1,0 +1,53 @@
+.UserDisplay {
+    width: 100%;
+    padding: 8px;
+    height: auto;
+    border-radius: 3px;
+    background-color: rgba(211, 211, 211, 0.575);
+    display: flex;
+    align-items: center;
+}
+
+.ImageContainer {
+    margin: 0 8px 0 0;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.TextContainer {
+    margin: 0;
+    padding: 8px;
+    display: flex;
+    flex-flow: column;
+}
+
+.UserOptions {
+    display: flex;
+    align-items: center;
+}
+
+.UserOptions p {
+    font-size: 13px;
+    color: rgb(41, 41, 233);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.UserOptions p:hover {
+    transform: scale(1.1);
+}
+
+.CloseIcon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.CloseIcon:hover {
+    transform: scale(1.1);
+}

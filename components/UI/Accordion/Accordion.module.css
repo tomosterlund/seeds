@@ -1,0 +1,47 @@
+.Accordion {
+    width: 95%;
+    max-width: 500px;
+    box-shadow: 0px 1px 3px gray;
+    display: flex;
+    flex-flow: column;
+    margin: 0px auto;
+    background-color: transparent;
+    z-index: 5;
+}
+
+.Accordion .Button {
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.23s linear;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 15px;
+    /* cursor: pointer; */
+    z-index: -1;
+}
+
+.AccordionSummaryDiv {
+    display: flex;
+    align-items: center;
+}
+
+.Accordion button:hover {
+    background-color: lightgray;
+}
+
+.AccordionContent {
+    transition: all 0.12s linear;
+}
+.Closed {
+    max-height: 0px;
+    overflow: hidden;
+}
+.Open {
+    padding: 16px;
+    max-height: auto;
+}

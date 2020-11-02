@@ -1,0 +1,14 @@
+.GreetingContainer {
+    width: 300px;
+    margin: 16px auto;
+    display: flex;
+    align-items: center;
+}
+
+.GreetingContainer p {
+    margin: 0 0 0 16px;
+}
+
+.TutorialIMG {
+    width: 50%;
+}

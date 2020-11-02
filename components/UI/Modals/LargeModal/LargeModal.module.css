@@ -1,0 +1,27 @@
+.ModalLarge {
+    z-index: 400;
+    background-color: white;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 3px;
+    width: 95%;
+    max-width: 500px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    transition: all 0.22s ease-out;
+    padding: 16px;
+    box-shadow: 1px 5px 8px rgb(0, 0, 0);
+    max-height: 80%;
+    overflow: auto;
+}
+
+.Show {
+    top: 10%;
+    transform: translateX(-50%);
+}
+
+.Hide {
+    top: -100%;
+}

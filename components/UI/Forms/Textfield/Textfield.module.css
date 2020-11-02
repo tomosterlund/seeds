@@ -1,0 +1,26 @@
+.TextfieldContainer {
+    display: flex;
+    flex-flow: column;
+}
+
+.TextfieldContainer label {
+    margin: 8px 0 4px 0;
+}
+
+.TextfieldContainer input {
+    width: 320px;
+    padding: 8px;
+    margin: 0px 0px 8px 0px;
+    font-size: 14px;
+}
+
+.TextfieldContainer input::placeholder {
+    font-family: 'Montserrat';
+}
+
+.Select {
+    width: 320px;
+    padding: 8px;
+    margin: 0px 0px 8px 0px;
+    font-size: 14px;
+}

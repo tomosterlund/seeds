@@ -1,0 +1,8 @@
+.AddTextHeader {
+    display: flex;
+    align-items: center;
+}
+
+.AddTextHeader h2 {
+    margin: 0 8px 0 0px;
+}

@@ -1,0 +1,17 @@
+.PageLoaderWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    height: 100vh;
+    width: 100vw;
+}
+
+.Progress {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+}

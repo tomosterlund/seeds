@@ -14,13 +14,8 @@ export default function Home() {
   }
 
   return <>
-    <Layout
-    title="Home | Seeds"
-    >
-      This is a child
-      <button onClick={getResponse}>
-        click me to get a server response
-      </button>
+    <Layout title="Home | Seeds">
+      
     </Layout>
   </>
 }

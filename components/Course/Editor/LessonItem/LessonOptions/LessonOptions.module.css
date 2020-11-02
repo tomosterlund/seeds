@@ -1,0 +1,11 @@
+.ModalListItem {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid gray;
+    font-size: 14px;
+    padding: 6px;
+}
+
+.ModalListItem:hover {
+    background-color: lightgray;
+}

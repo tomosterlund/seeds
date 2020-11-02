@@ -1,0 +1,14 @@
+.RegistrationPage {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.Form {
+    display: flex;
+    flex-flow: column;
+    width: 95%;
+    align-items: center;
+}

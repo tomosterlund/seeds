@@ -1,0 +1,14 @@
+.MiniButton {
+    margin: 0 0 0 8px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 2px;
+    text-transform: uppercase;
+    color: black;
+    font-weight: 700;
+    font-family: 'Montserrat';
+    cursor: pointer;
+}

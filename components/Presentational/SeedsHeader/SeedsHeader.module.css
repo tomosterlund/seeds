@@ -1,0 +1,13 @@
+.SeedsHeader {
+    display: flex;
+    align-items: center;
+    margin: 16px 0 0 0;
+}
+
+.SproutIMG {
+    height: 25px;
+}
+
+.SeedsHeader h2 {
+    margin: 0 0 0 16px;
+}
