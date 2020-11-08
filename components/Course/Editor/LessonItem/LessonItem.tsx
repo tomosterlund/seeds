@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { showQuizEditor } from './../../../../store/actions/showQuizEditorActions'
 import Router from 'next/router'
 import styles from './LessonItem.module.css'
 import { Movie, Subject, HelpOutline, ExpandMore } from '@material-ui/icons'
@@ -40,25 +42,25 @@ const LessonItem: React.FC<Props> = ({ title, lessonType, lessonId, courseId, se
         setShowTextEditor(false);
     }
 
+    // State & method for editing quiz
+    const dispatch = useDispatch()
+    const fetchQuiz = async () => {
+        try {
+            dispatch(showQuizEditor(lessonId));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const openLessonEditor = () => {
             toggleTitleEditor(true);
     }
 
     const editLessonName = async () => {
-        if (lessonType === 'video') {
-            const postedNewVideoTitle = await axios.post(`/c-api/edit-video-title/${lessonId}`, { newTitle, sectionId });
-            console.log(postedNewVideoTitle);
-            Router.push(`/course/editor/${courseId}`);
-            toggleTitleEditor(false);
-        }
-
-        if (lessonType === 'text') {
-            console.log('sdfe');
-            const postedNewTextTitle = await axios.post(`/c-api/edit-text-title/${lessonId}`, { newTitle, sectionId });
-            console.log(postedNewTextTitle);
-            Router.push(`/course/editor/${courseId}`);
-            toggleTitleEditor(false);
-        }
+        const postedNewLessonTitle = await axios.post(`/c-api/edit-${lessonType}-title/${lessonId}`, { newTitle, sectionId });
+        console.log(postedNewLessonTitle);
+        Router.push(`/course/editor/${courseId}`);
+        toggleTitleEditor(false);
     }
 
     const deleteLesson = async () => {
@@ -85,11 +87,12 @@ const LessonItem: React.FC<Props> = ({ title, lessonType, lessonId, courseId, se
                         className={styles.TitleInput}
                         placeholder={title}
                         type="text"
-                        onBlur={() => toggleTitleEditor(false)}
                         />
-                        <MiniButton click={editLessonName} text="save">
-                            <Check2Circle style={{fontSize: '22px', margin: '0 4px 0 0', color: '#2a772d'}} className={styles.CheckIcon} />
-                        </MiniButton>
+                        <div onClick={editLessonName}>
+                            <MiniButton text="save">
+                                <Check2Circle style={{fontSize: '22px', margin: '0 4px 0 0', color: '#2a772d'}} className={styles.CheckIcon} />
+                            </MiniButton>
+                        </div>
                     </div>
                 )
             }
@@ -106,6 +109,7 @@ const LessonItem: React.FC<Props> = ({ title, lessonType, lessonId, courseId, se
                 openLessonEditor={openLessonEditor}
                 lessonId={lessonId}
                 fetchTextContent={fetchTextContent}
+                fetchQuiz={fetchQuiz}
                 />
             </div>
             <Backdrop show={showTextEditor} toggle={() => setShowTextEditor(false)} />

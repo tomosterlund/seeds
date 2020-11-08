@@ -12,6 +12,10 @@ interface stateInterface {
             password: string,
             __v: number
         }
+    },
+    showQuizEditor: {
+        showQuizEditor: boolean,
+        lessonId: string
     }
 }
 

@@ -5,6 +5,7 @@ const Section = require('./../../Models/CourseSection');
 const Course = require('./../../Models/Course');
 const deleteLessonInCourse = require('./../../util/DBUtil/deleteLessonInCourse');
 const deleteLessonInSection = require('./../../util/DBUtil/deleteLessonInSection');
+const pushLessonIntoCourse = require('../../util/DBUtil/pushLessonIntoCourse');
 
 router.post('/c-api/course/:courseId/add-text', async (req, res) => {
     const courseId = req.params.courseId;
@@ -31,7 +32,7 @@ router.post('/c-api/course/:courseId/add-text', async (req, res) => {
             popularity
         })
         const postedText = await newText.save();
-        const lessonId = postedText._id;
+        const lessonId = String(postedText._id);
 
         // Update section
         const section = await Section.findById(sectionId);
@@ -39,9 +40,7 @@ router.post('/c-api/course/:courseId/add-text', async (req, res) => {
         await section.save()
 
         // Update course
-        const course = await Course.findById(courseId);
-        course.lessonIds.push(String(postedText._id));
-        await course.save();
+        await pushLessonIntoCourse(lessonId, courseId)
 
         res.json({ postedText: true });
     } catch (error) {

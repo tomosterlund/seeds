@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
+import Router from 'next/router'
 import styles from './Accordion.module.css'
-import { ExpandMore, ExpandLess } from '@material-ui/icons'
-import { Draggable } from 'react-beautiful-dnd'
-import { resetServerContext } from "react-beautiful-dnd"
+import { ExpandMore, ExpandLess, Edit } from '@material-ui/icons'
+import { Draggable, resetServerContext } from 'react-beautiful-dnd'
+import TextfieldMini from '../Forms/Textfield/TextfieldMini';
+import MiniButton from '../SeedsButton/MiniButton';
+import axios from 'axios'
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
@@ -23,13 +26,27 @@ interface Props {
     sectionTitle: string;
     sectionId: string;
     sectionIndex: number;
+    courseId: string;
 }
 
-const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, sectionIndex }) => {
+const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, sectionIndex, courseId }) => {
     const [expanded, setExpanded] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [toggleTitleInput, setToggleTitleInput] = useState(false);
 
     const toggleExpanded = () => {
         setExpanded(!expanded);
+    }
+
+    const changeSectionTitle = async () => {
+        try {
+            const editTitle = await axios.patch(`/c-api/edit-section-title/${sectionId}`, { newTitle: newTitle });
+            setNewTitle('');
+            setToggleTitleInput(false);
+            Router.push(`/course/editor/${courseId}`);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -45,15 +62,34 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
                         provided.draggableProps.style
                     )}
                 >
-                    <div className={styles.Button} onClick={toggleExpanded}>
+                    <div className={styles.Button}>
                         <div className={styles.AccordionSummaryDiv}>
-                            {sectionTitle}
+                            {!toggleTitleInput ? (
+                                <Fragment>
+                                    {sectionTitle}
+                                    <div onClick={() => setToggleTitleInput(true)} className={styles.EditIcon}>
+                                        <Edit style={{ margin: '0 0 0 8px' }} fontSize="small" />
+                                    </div>
+                                </Fragment>
+                            ) : (
+                                <Fragment>
+                                    <TextfieldMini
+                                    inputType="text"
+                                    placeholder="Type new section title"
+                                    inputValue={newTitle}
+                                    updateState={(event) => setNewTitle(event.target.value)}
+                                    />
+                                    <div onClick={changeSectionTitle} className={styles.EditTitleButton}>
+                                        <MiniButton text="save title" />
+                                    </div>
+                                </Fragment>
+                            )}
                         </div>
                         <div className={styles.AccordionSummaryDiv}>
                             {
                                 expanded ? (
-                                    <ExpandLess onClick={toggleExpanded} style={{ color: '#808080' }} />
-                                ) : <ExpandMore onClick={toggleExpanded} style={{ color: '#808080' }} />
+                                    <ExpandLess onClick={toggleExpanded} style={{ color: '#808080', cursor: 'pointer' }} />
+                                ) : <ExpandMore onClick={toggleExpanded} style={{ color: '#808080', cursor: 'pointer' }} />
                             }
                         </div>
                     </div>

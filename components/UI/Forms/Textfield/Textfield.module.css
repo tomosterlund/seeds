@@ -12,6 +12,7 @@
     padding: 8px;
     margin: 0px 0px 8px 0px;
     font-size: 14px;
+    font-family: 'Montserrat';
 }
 
 .TextfieldContainer input::placeholder {

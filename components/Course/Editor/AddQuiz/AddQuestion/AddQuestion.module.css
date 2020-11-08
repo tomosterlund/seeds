@@ -1,0 +1,58 @@
+.AddQuestion {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.QuestionInputContainer {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    margin: 8px 0 16px 0;
+}
+
+.QuestionInputContainer h3 {
+    margin: 0;
+}
+
+.Textarea {
+    margin: 4px 0;
+    resize: none;
+    font-family: 'Montserrat';
+    font-size: 14px;
+    padding: 8px;
+    line-height: 1.6;
+}
+
+.AnswerContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.ClearIcon:hover {
+    transform: scale(1.1);
+    color: red;
+    cursor: pointer;
+}
+
+.AddAnswerOption {
+    display: flex;
+    align-items: center;
+    margin: 16px 0 8px 0;
+    cursor: pointer;
+}
+
+.AddAnswerOption:hover {
+    color: #3e7cce;
+}
+
+.AddAnswerOption p {
+    margin: 0 0 0 8px;
+}
+
+.ButtonsContainer {
+    display: flex;
+    align-items: center;
+}

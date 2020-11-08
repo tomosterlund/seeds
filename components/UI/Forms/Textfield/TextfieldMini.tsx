@@ -6,7 +6,7 @@ interface Props {
     label?: string;
     inputValue: string;
     inputType: string;
-    updateState: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+    updateState: (event: any) => void;
 }
 
 const TextfieldMini: React.FC<Props> = ({ placeholder, label, inputValue, inputType, updateState }) => {

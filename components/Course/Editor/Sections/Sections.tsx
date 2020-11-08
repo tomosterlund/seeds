@@ -27,7 +27,7 @@ interface Lesson {
     lessonType: 'video' | 'text' | 'quiz';
 }
 
-const reorder = (list, startIndex, endIndex): Section[] => {
+const reorder = (list, startIndex, endIndex): any => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -48,6 +48,7 @@ const Sections: React.FC<Props> = ({ sections, openAddLesson, courseId, sectionI
 
     const onDragEnd = async (result: any) => {
         // Setting the new state within the app
+        console.log('onDragEnd runs');
         if (!result.destination) { return; }
         const newList = reorder(
             courseSections,
@@ -79,7 +80,13 @@ const Sections: React.FC<Props> = ({ sections, openAddLesson, courseId, sectionI
                     >
                         {
                             courseSections.map((s: Section, index) => (
-                                <Accordion key={s._id} sectionTitle={s.title} sectionIndex={index} sectionId={s._id}>
+                                <Accordion
+                                key={s._id}
+                                sectionTitle={s.title}
+                                sectionIndex={index}
+                                sectionId={s._id}
+                                courseId={courseId}
+                                >
                                     {
                                         s.lessons.map((l: Lesson, i) => (
                                             <div key={i}>

@@ -6,3 +6,15 @@
 .HeaderDiv h2 {
     margin: 0 8px 0 0;
 }
+
+.QuestionItemContainer {
+    width: 100%;
+    max-width: 350px;
+}
+
+.DroppableContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+}

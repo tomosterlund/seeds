@@ -27,7 +27,12 @@
 
 .AccordionSummaryDiv {
     display: flex;
-    align-items: center;
+    margin: 0 0 0 0;
+}
+
+.EditIcon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }
 
 .Accordion button:hover {
@@ -44,4 +49,11 @@
 .Open {
     padding: 16px;
     max-height: auto;
+}
+
+.EditTitleButton {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 6px 0 0 0;
 }

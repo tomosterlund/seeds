@@ -7,6 +7,7 @@ const Section = require('./../../Models/CourseSection');
 const Video = require('./../../Models/lessons/Video');
 const deleteLessonInCourse = require('./../../util/DBUtil/deleteLessonInCourse');
 const deleteLessonInSection = require('../../util/DBUtil/deleteLessonInSection');
+const pushLessonIntoCourse = require('../../util/DBUtil/pushLessonIntoCourse');
 
 router.post('/c-api/course/:courseId/add-video', uploadVideo(), async (req, res) => {
     const videoData = JSON.parse(req.body.title);
@@ -29,7 +30,7 @@ router.post('/c-api/course/:courseId/add-video', uploadVideo(), async (req, res)
             authorImageUrl: req.session.user.imageUrl
         });
         const savedVideo = await newVideo.save()
-        const lessonId = savedVideo._id;
+        const lessonId = String(savedVideo._id);
 
         // Update section
         const section = await Section.findById(sectionId);
@@ -37,9 +38,7 @@ router.post('/c-api/course/:courseId/add-video', uploadVideo(), async (req, res)
         await section.save()
 
         // Update course
-        const course = await Course.findById(courseId);
-        course.lessonIds.push(String(savedVideo._id));
-        await course.save();
+        await pushLessonIntoCourse(lessonId, courseId);
         
         res.json({ uploadedVideo: true });
     } catch (error) {

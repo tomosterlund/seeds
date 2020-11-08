@@ -3,13 +3,13 @@ import styles from './MiniButton.module.css'
 
 interface Props {
     text: string;
-    click: () => void;
+    click?: () => void;
 }
 
 const MiniButton: React.FC<Props> = ({ text, children, click }) => {
     return<>
-        <div onClick={click}>
-            <button className={styles.MiniButton}>
+        <div>
+            <button onClick={click} className={styles.MiniButton}>
                 {children}
                 {text}
             </button>

@@ -10,9 +10,10 @@ interface Props {
     lessonType: 'text' | 'video' | 'quiz';
     lessonId: string;
     fetchTextContent: () => void;
+    fetchQuiz: () => void;
 }
 
-const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteLesson, lessonType, lessonId, fetchTextContent }) => {
+const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteLesson, lessonType, lessonId, fetchTextContent, fetchQuiz }) => {
     return <>
         <ModalMini
             show={showOptions}
@@ -21,6 +22,12 @@ const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteL
                 <div onClick={fetchTextContent} className={styles.ModalListItem}>
                     <Edit />
                     <p>Edit text</p>
+                </div>
+            ) : null}
+            {lessonType === 'quiz' ? (
+                <div onClick={fetchQuiz} className={styles.ModalListItem}>
+                    <Edit />
+                    <p>Edit quiz</p>
                 </div>
             ) : null}
             <div onClick={openLessonEditor} className={styles.ModalListItem}>

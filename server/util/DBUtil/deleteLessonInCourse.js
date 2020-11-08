@@ -5,7 +5,6 @@ const deleteLessonInCourse = async (courseId, lessonId) => {
     let lessonIndex;
     for (let i = 0; i < course.lessonIds.length; i++) {
         if (course.lessonIds[i] == lessonId) {
-            console.log('Algorithm works');
             lessonIndex = i;
         }
     }

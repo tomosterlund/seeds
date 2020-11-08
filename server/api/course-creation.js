@@ -65,6 +65,19 @@ router.post(`/c-api/course/:courseId/reorder-sections`, async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+});
+
+router.patch('/c-api/edit-section-title/:sectionId', async (req, res) => {
+    const sectionId = req.params.sectionId;
+    const newTitle = req.body.newTitle;
+    try {
+        const section = await CourseSection.findById(sectionId);
+        section.title = newTitle;
+        await section.save();
+        res.json({ changedTitle: true, courseId: section._id });
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 module.exports = router;

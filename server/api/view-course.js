@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
-const User = require('./../Models/User');
 const Course = require('./../Models/Course');
 const CourseSection = require('./../Models/CourseSection');
 

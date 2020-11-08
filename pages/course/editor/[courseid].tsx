@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { showQuizEditor, hideQuizEditor } from './../../../store/actions/showQuizEditorActions'
+import stateInterface from './../../../interfaces/stateInterface'
 import { GetServerSideProps } from 'next'
 import Router from 'next/router'
 import styles from './CourseEditor.module.css'
@@ -42,14 +45,15 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
     const [showAddSection, setShowAddSection] = useState(false);
     const [showAddVideo, setShowAddVideo] = useState(false);
     const [showAddText, setShowAddText] = useState(false);
-    const [showAddQuiz, setShowAddQuiz] = useState(false);
+    const showAddQuiz = useSelector((state: stateInterface) => state.showQuizEditor.showQuizEditor);
     const [chosenSectionId, setChosenSectionId] = useState(''); // To be passed as prop to addLessonModal
     
+    const dispatch = useDispatch();
     const closeBackdrop = () => {
         setShowAddVideo(false);
         setShowAddSection(false);
         setShowAddText(false);
-        setShowAddQuiz(false);
+        dispatch(hideQuizEditor());
     }
 
     const openAddLesson = (lessonType: string, sectionId: string) => {
@@ -65,12 +69,8 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
         }
 
         if (lessonType === 'quiz') {
-            return setShowAddQuiz(true);
+            return dispatch(showQuizEditor());
         }
-    }
-
-    const onDragEnd = (result) => {
-        console.log('wef');
     }
 
     return<>
@@ -98,12 +98,10 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
                             />
             </div>
 
-            {/* Modals
-            for
-            adding lessons */}
+            {/* Modals for opening add-lesson alternatives  */}
             <AddVideo close={() => setShowAddVideo(false)} courseId={props._id} sectionId={chosenSectionId} show={showAddVideo} />
             <AddText close={() => setShowAddText(false)} show={showAddText} courseId={props._id} sectionId={chosenSectionId} />
-            <AddQuiz close={() => setShowAddQuiz(false)} show={showAddQuiz} courseId={props._id} sectionId={chosenSectionId} />
+            <AddQuiz close={() => dispatch(hideQuizEditor())} show={showAddQuiz} courseId={props._id} sectionId={chosenSectionId} />
             <AddSection close={() => setShowAddSection(false)} show={showAddSection} courseId={props._id} />
             {
                 showAddVideo || showAddSection || showAddText || showAddQuiz ? (
