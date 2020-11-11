@@ -1,10 +1,16 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const router = express.Router();
 const User = require('./../Models/User');
 const Course = require('./../Models/Course');
 const CourseSection = require('./../Models/CourseSection');
+const Video = require('./../Models/lessons/Video');
+const Text = require('./../Models/lessons/Text');
+const Quiz = require('./../Models/lessons/Quiz');
+const Question = require('./../Models/lessons/Question');
+
 const uploadImage = require('./../util/uploadImage');
+const deleteLessonInCourse = require('../util/DBUtil/deleteLessonInCourse');
+const deleteVideo = require('../util/deleteVideo');
 
 router.post('/c-api/course/create-new', uploadImage(), async (req, res) => {
     const courseData = JSON.parse(req.body.courseData);
@@ -78,6 +84,34 @@ router.patch('/c-api/edit-section-title/:sectionId', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-})
+});
+
+router.delete('/c-api/section/:sectionId', async (req, res) => {
+    const sectionId = req.params.sectionId;
+    try {
+        const section = await CourseSection.findById(sectionId);
+        const lessons = section.lessons;
+        const courseId = section.courseId;
+        for (let l of lessons) {
+            let lessonId = l.lessonId
+            await deleteLessonInCourse(courseId, lessonId);
+            await Text.findByIdAndDelete(lessonId);
+            await Quiz.findByIdAndDelete(lessonId);
+            const video = await Video.findById(lessonId).lean();
+            await Video.findByIdAndDelete(lessonId);
+            if (video) {
+                await deleteVideo(video.videoUrl);
+            }
+            const questions = await Question.find({ lessonId: lessonId });
+            for (let q of questions) {
+                await Question.findByIdAndDelete(String(q._id));
+            }
+        }
+        await CourseSection.findByIdAndDelete(sectionId);
+        res.json({ sectionDeleted: true });
+    } catch (error) {
+        console.log(error);
+    }
+}) 
 
 module.exports = router;

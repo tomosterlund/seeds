@@ -46,7 +46,7 @@ const AddSection: React.FC<Props> = ({ show, courseId, close }) => {
                 />
             </div>
             <AppButton click={createSectionHandler} text="Add section" image={false}>
-                <PlusCircle />
+                <PlusCircle style={{ margin: '0 6px 0 0' }} />
             </AppButton>
         </Modal>
     </>

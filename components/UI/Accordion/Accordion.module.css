@@ -6,7 +6,7 @@
     flex-flow: column;
     margin: 0px auto;
     background-color: transparent;
-    z-index: 5;
+    /* z-index: 5; */
 }
 
 .Accordion .Button {
@@ -21,8 +21,7 @@
     padding: 16px;
     font-family: inherit;
     font-size: 15px;
-    /* cursor: pointer; */
-    z-index: -1;
+    /* z-index: -1; */
 }
 
 .AccordionSummaryDiv {
@@ -56,4 +55,8 @@
     align-items: center;
     height: 100%;
     margin: 6px 0 0 0;
+}
+
+.SettingsDiv {
+    position: relative;
 }

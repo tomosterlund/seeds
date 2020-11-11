@@ -21,6 +21,16 @@ router.get('/c-api/course/:courseId', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-})
+});
+
+router.get('/c-api/my-courses/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const myCourses = await Course.find({ authorId: userId }).lean();
+        res.json({ myCourses });
+    } catch (error) {
+        console.log(error);
+    }
+}) 
 
 module.exports = router;

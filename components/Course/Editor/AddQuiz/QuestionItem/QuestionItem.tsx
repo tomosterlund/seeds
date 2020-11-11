@@ -40,7 +40,7 @@ const QuestionItem: React.FC<Props> = ({ question, idx, questionId, openQuestion
             className={styles.ExpandMore}
             >
                 <ExpandMore />
-                <ModalMini show={showQuestionOptions}>
+                <ModalMini position="right" show={showQuestionOptions}>
                     <div onClick={() => openQuestionEditor(questionId)} className={optionStyles.ModalListItem}>
                         <Edit />
                         <p>Edit question</p>

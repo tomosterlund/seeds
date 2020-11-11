@@ -69,7 +69,7 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
         }
 
         if (lessonType === 'quiz') {
-            return dispatch(showQuizEditor());
+            return dispatch(showQuizEditor(''));
         }
     }
 

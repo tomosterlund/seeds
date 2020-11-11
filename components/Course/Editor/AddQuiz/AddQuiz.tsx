@@ -1,6 +1,6 @@
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, Fragment, useEffect, useRef } from 'react'
+import Router from 'next/router'
 import { useSelector } from 'react-redux'
-import { DragDropContext, Droppable, Draggable, resetServerContext } from "react-beautiful-dnd";
 import stateInterface from './../../../../interfaces/stateInterface'
 import ModalLarge from './../../../UI/Modals/LargeModal/LargeModal'
 import { HelpOutline } from '@material-ui/icons'
@@ -10,7 +10,6 @@ import styles from './AddQuiz.module.css'
 import { PlusCircle } from 'react-bootstrap-icons'
 import AddQuestion from './AddQuestion/AddQuestion'
 import QuestionItem from './QuestionItem/QuestionItem'
-// import { reorder } from './../../../../util/DND/reorderList'
 import axios from 'axios'
 
 const reorder = (list, startIndex, endIndex): any => {
@@ -27,25 +26,17 @@ interface Props {
     show: boolean;
 }
 
-resetServerContext();
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-    userSelect: "none",
-    padding: '0',
-    margin: '0',
-    background: isDragging ? "lightgray" : "white",
-    ...draggableStyle
-});
-
 const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
     const [quizTitle, setQuizTitle] = useState('');
     const [quizDoc, setQuizDoc] = useState({ title: '', questionIds: [], _id: '' }); // Received upon submitting a quiz for the first time
     const [quizQuestions, setQuizQuestions] = useState([]);
     const [showAddQuestion, setShowAddQuestion] = useState(false); // Toggles showing the add question alternative
     const [questionEditorMode, setQuestionEditorMode] = useState('add'); // Toggles between add question and edit question mode
-    const lessonId = useSelector((state: stateInterface) => state.showQuizEditor.lessonId);
+    let lessonId = useSelector((state: stateInterface) => state.showQuizEditor.lessonId);
     const [questionToBeEdited, setQuestionToBeEdited] = useState(''); // ID to be passed in API-call when editing question 
     const [questionDoc, setQuestionDoc] = useState(); // Question Doc fetched from server, in order to edit question
+
+    const prevState = usePrevious(lessonId);
 
     useEffect(() => {
         const fetchQuizData = async () => {
@@ -59,6 +50,15 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
             }
         }
         if (!quizDoc.title && lessonId) { fetchQuizData() }
+
+        if (lessonId !== prevState) {
+            fetchAPIAgain();
+        }
+
+        if (!lessonId && lessonId !== prevState) {
+            setQuizDoc({ title: '', questionIds: [], _id: '' });
+            setQuizQuestions([]);
+        }
     })
 
     const fetchAPIAgain = async () => {
@@ -86,17 +86,19 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
             const createdQuizDoc = await axios.post(`/c-api/create-quiz`, quizData);
             console.log(createdQuizDoc);
             setQuizDoc(createdQuizDoc.data.quizDoc);
+            Router.push(`/course/editor/${courseId}`)
         } catch (error) {
             console.log(error);
         }
     }
 
-    const closeAddQuestion = async () => {
+    const closeAddQuestion = async (lid: string) => {
+        const getQuizDoc = await axios.get(`/c-api/get-quiz/${lid}`);
+        setQuizDoc(getQuizDoc.data.quizDoc);
+        setQuizQuestions(getQuizDoc.data.questions);
         setShowAddQuestion(false);
         try {
-            const quizObject = await axios.get(`/c-api/get-quiz/${lessonId}`);
-            setQuizDoc(quizObject.data.quizDoc);
-            setQuizQuestions(quizObject.data.questions);
+            await fetchAPIAgain();
             setQuestionEditorMode('add');
             setQuestionDoc(null);
         } catch (error) {
@@ -116,26 +118,6 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
         } catch (error) {
             console.log(error);
         }
-    }
-
-    const onQuestionDragEnd = async (result: any) => {
-        // Setting the new state within the app
-        if (!result.destination) { return console.log('same as before'); }
-        const newList = reorder(
-            quizQuestions,
-            result.source.index,
-            result.destination.index
-        );
-        setQuizQuestions(newList);
-
-        // Posting the new order
-        let newOrder = [];
-        for (let q of newList) {
-            newOrder.push(q._id);
-        }
-        console.log(newOrder);
-        // await axios.patch(`/c-api/edit-question-order/${quizDoc._id}`, newOrder);
-        // fetchAPIAgain();
     }
 
     return <>
@@ -182,6 +164,7 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
                                 {quizQuestions.map((q, i) => (
                                     <div
                                         className={styles.QuestionItemContainer}
+                                        key={i}
                                     >
                                         <QuestionItem
                                             idx={i}
@@ -192,12 +175,21 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
                                         />
                                     </div>
                                 ))}
+                                <div style={{ margin: '0 0 30px' }}></div>
                             </div>
                         </Fragment>
                     )
             }
         </ModalLarge>
     </>
+}
+
+function usePrevious(lessonId: any) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = lessonId;
+    });
+    return ref.current;
 }
 
 export default AddQuiz;

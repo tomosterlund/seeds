@@ -27,7 +27,7 @@ interface Lesson {
     lessonType: 'video' | 'text' | 'quiz';
 }
 
-const reorder = (list, startIndex, endIndex): any => {
+const reorder = (list: [], startIndex: number, endIndex: number): any => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -35,7 +35,7 @@ const reorder = (list, startIndex, endIndex): any => {
 };
 
 
-const Sections: React.FC<Props> = ({ sections, openAddLesson, courseId, sectionIds }) => {
+const Sections: React.FC<Props> = ({ sections, openAddLesson, courseId }) => {
     const [courseSections, setCourseSections] = useState(sections);
 
     const prevSections = usePrevious(sections);

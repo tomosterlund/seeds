@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSessionUser } from './../../../store/actions/sessionAction'
 import styles from './Sidedrawer.module.css'
@@ -7,7 +7,8 @@ import {
     BoxArrowInRight,
     HouseDoorFill,
     PersonPlus,
-    PlusSquare
+    PlusSquare,
+    Book
 } from 'react-bootstrap-icons'
 import axios from 'axios'
 import stateInterface from '../../../interfaces/stateInterface'
@@ -20,6 +21,8 @@ interface Props {
 
 const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
     let sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
+    const [userId, setUserId] = useState('');
+    const [setIdOnce, setSetIdOnce] = useState(false);
     const dispatch = useDispatch();
     
     useEffect(() => {
@@ -30,6 +33,11 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
                 dispatch(setSessionUser(sessionUserAPI.data.sessionUser));
             }
             fetchSessionUser()
+        }
+
+        if (!setIdOnce && sessionUser) {
+            setUserId(sessionUser._id);
+            setSetIdOnce(true);
         }
     })
 
@@ -61,6 +69,11 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
             component: <PlusSquare />,
             text: 'Create content',
             route: '/course/create-new'
+        },
+        {
+            component: <Book />,
+            text: 'My content',
+            route: `/my-courses/${userId}`
         }
     ]
 

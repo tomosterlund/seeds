@@ -90,7 +90,7 @@ router.post('/c-api/post-question/:lessonId', async (req, res) => {
         const quiz = await Quiz.findById(questionObject.lessonId);
         quiz.questionIds.push(String(savedQuestion._id));
         await quiz.save();
-        res.json({ postedQuestion: true });
+        res.json({ postedQuestion: true, quizDoc: quiz });
     } catch (error) {
         console.log(error);
     }

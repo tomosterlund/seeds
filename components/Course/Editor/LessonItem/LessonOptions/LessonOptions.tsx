@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './LessonOptions.module.css'
 import ModalMini from './../../../../UI/Modals/ModalMini/ModalMini'
 import { Title, Delete, Edit } from '@material-ui/icons'
@@ -17,6 +17,7 @@ const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteL
     return <>
         <ModalMini
             show={showOptions}
+            position="right"
         >
             {lessonType === 'text' ? (
                 <div onClick={fetchTextContent} className={styles.ModalListItem}>

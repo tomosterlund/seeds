@@ -1,10 +1,12 @@
 import React, { useState, Fragment } from 'react'
 import Router from 'next/router'
 import styles from './Accordion.module.css'
-import { ExpandMore, ExpandLess, Edit } from '@material-ui/icons'
+import moreStyles from './../../Course/Editor/LessonItem/LessonOptions/LessonOptions.module.css'
+import { ExpandMore, ExpandLess, Edit, Settings, Title, Delete } from '@material-ui/icons'
 import { Draggable, resetServerContext } from 'react-beautiful-dnd'
 import TextfieldMini from '../Forms/Textfield/TextfieldMini';
 import MiniButton from '../SeedsButton/MiniButton';
+import ModalMini from './../Modals/ModalMini/ModalMini'
 import axios from 'axios'
 
 const getItemStyle = (isDragging, draggableStyle) => ({
@@ -33,6 +35,7 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
     const [expanded, setExpanded] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [toggleTitleInput, setToggleTitleInput] = useState(false);
+    const [showSectionOptions, toggleSectionOptions] = useState(false);
 
     const toggleExpanded = () => {
         setExpanded(!expanded);
@@ -43,6 +46,18 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
             const editTitle = await axios.patch(`/c-api/edit-section-title/${sectionId}`, { newTitle: newTitle });
             setNewTitle('');
             setToggleTitleInput(false);
+            Router.push(`/course/editor/${courseId}`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteSection = async () => {
+        console.log('Ran delete section function');
+        try {
+            const deletedSection = await axios.delete(`/c-api/section/${sectionId}`);
+            console.log(deletedSection);
+            console.log('Delete sectionfunction finished');
             Router.push(`/course/editor/${courseId}`);
         } catch (error) {
             console.log(error);
@@ -67,8 +82,22 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
                             {!toggleTitleInput ? (
                                 <Fragment>
                                     {sectionTitle}
-                                    <div onClick={() => setToggleTitleInput(true)} className={styles.EditIcon}>
-                                        <Edit style={{ margin: '0 0 0 8px' }} fontSize="small" />
+                                    <div
+                                    onMouseEnter={() => toggleSectionOptions(true)}
+                                    onMouseLeave={() => toggleSectionOptions(false)}
+                                    className={styles.SettingsDiv}
+                                    >
+                                        <Settings style={{ margin: '0 0 0 8px' }} fontSize="small" />
+                                        <ModalMini position="left" show={showSectionOptions}>
+                                            <div onClick={() => setToggleTitleInput(true)} className={moreStyles.ModalListItem}>
+                                                <Title />
+                                                Edit section title
+                                            </div>
+                                            <div onClick={deleteSection} className={moreStyles.ModalListItem}>
+                                                <Delete />
+                                                Delete section
+                                            </div>
+                                        </ModalMini>
                                     </div>
                                 </Fragment>
                             ) : (

@@ -24,7 +24,7 @@ interface QuestionObject {
 
 interface Props {
     lessonId: string;
-    closeShowAddQuestion: () => void;
+    closeShowAddQuestion: (lid?: string) => void;
     mode: string;
     questionId?: string;
     questionDoc?: QuestionObject;
@@ -87,7 +87,9 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
             const questionObject = createQuestionObject();
             try {
                 const postedQuestion = await axios.post(`/c-api/post-question/${lessonId}`, questionObject);
-                closeShowAddQuestion();
+                console.log(postedQuestion);
+                const lid = postedQuestion.data.quizDoc._id
+                closeShowAddQuestion(lid);
             } catch (error) {console.log(error)}
         } 
 
@@ -96,7 +98,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
             try {
                 const editedQuestion = await axios.patch(`/c-api/edit-question/${questionId}`, questionObject);
                 console.log(editedQuestion);
-                closeShowAddQuestion();
+                closeShowAddQuestion(lessonId);
             } catch (error) {console.log(error)}
         }
     }
@@ -190,14 +192,14 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                 text="Save question"
                 click={postQuestion}
                 />
-
-                <SeedButton
-                image={false}
-                text={mode === 'add' ? 'Discard' : 'Discard changes'}
-                click={closeShowAddQuestion}
-                backgroundColor="red">
-                    <TrashFill style={{ margin: '0 8px 0 0' }} />
-                </SeedButton>
+                <div onClick={() => closeShowAddQuestion(lessonId)}>
+                    <SeedButton
+                    image={false}
+                    text={mode === 'add' ? 'Discard' : 'Discard changes'}
+                    backgroundColor="red">
+                        <TrashFill style={{ margin: '0 8px 0 0' }} />
+                    </SeedButton>
+                </div>
             </div>
         </div>
     </>

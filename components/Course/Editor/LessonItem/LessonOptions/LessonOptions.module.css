@@ -4,6 +4,8 @@
     border-bottom: 1px solid gray;
     font-size: 14px;
     padding: 6px;
+    z-index: 2000;
+    cursor: pointer;
 }
 
 .ModalListItem:hover {

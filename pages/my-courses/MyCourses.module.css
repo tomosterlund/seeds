@@ -1,0 +1,45 @@
+.PageContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+}
+
+.HeaderContainer {
+    margin: 0 0 8px 0;
+}
+
+.CourseContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid gray;
+    width: 90%;
+    cursor: pointer;
+}
+
+.CourseImage {
+    background-size: cover;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.CourseContainer p {
+    margin: 0 0 0 16px;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.WrenchIconContainer {
+    position: absolute;
+    top: auto;
+    right: 0;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.WrenchIconContainer:hover {
+    color: rgb(41, 41, 233);
+}
