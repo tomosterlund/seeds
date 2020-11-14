@@ -10,7 +10,8 @@ const Question = require('./../Models/lessons/Question');
 
 const uploadImage = require('./../util/uploadImage');
 const deleteLessonInCourse = require('../util/DBUtil/deleteLessonInCourse');
-const deleteVideo = require('../util/deleteVideo');
+const deleteVideo = require('../util/deleteMedia');
+const deleteMedia = require('../util/deleteMedia');
 
 router.post('/c-api/course/create-new', uploadImage(), async (req, res) => {
     const courseData = JSON.parse(req.body.courseData);
@@ -112,6 +113,26 @@ router.delete('/c-api/section/:sectionId', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}) 
+});
+
+router.patch('/c-api/edit-course/:courseId', uploadImage(), async (req, res) => {
+    const courseData = JSON.parse(req.body.title);
+    const courseId = req.params.courseId;
+    const title = courseData.title;
+    try {
+        const course = await Course.findById(courseId);
+        let imageUrl = course.imageUrl;
+        if (req.file) {
+            await deleteMedia(imageUrl);
+            imageUrl = req.file.key;
+        }
+        course.title = title;
+        course.imageUrl = imageUrl;
+        await course.save();
+        res.json({ savedChanges: true });
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 module.exports = router;

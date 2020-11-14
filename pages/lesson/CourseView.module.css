@@ -1,0 +1,13 @@
+.CourseView {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+}
+
+.FlexColumn {
+    display: flex;
+    max-width: 600px;
+    flex-flow: column;
+    align-items: center;
+}

@@ -16,6 +16,9 @@ import Backdrop from './../../../components/UI/Backdrop/Backdrop'
 import AppButton from './../../../components/UI/SeedsButton/SeedButton'
 import { PlusCircle } from 'react-bootstrap-icons'
 import Sections from './../../../components/Course/Editor/Sections/Sections'
+import FloatingButton from '../../../components/UI/FloatingButton/FloatingButton'
+import { Build } from '@material-ui/icons'
+import CourseSettings from '../../../components/Course/Editor/CourseSettings/CourseSettings'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const courseId = context.params.courseid;
@@ -45,6 +48,7 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
     const [showAddSection, setShowAddSection] = useState(false);
     const [showAddVideo, setShowAddVideo] = useState(false);
     const [showAddText, setShowAddText] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
     const showAddQuiz = useSelector((state: stateInterface) => state.showQuizEditor.showQuizEditor);
     const [chosenSectionId, setChosenSectionId] = useState(''); // To be passed as prop to addLessonModal
     
@@ -53,6 +57,7 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
         setShowAddVideo(false);
         setShowAddSection(false);
         setShowAddText(false);
+        setShowSettings(false);
         dispatch(hideQuizEditor());
     }
 
@@ -103,11 +108,15 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
             <AddText close={() => setShowAddText(false)} show={showAddText} courseId={props._id} sectionId={chosenSectionId} />
             <AddQuiz close={() => dispatch(hideQuizEditor())} show={showAddQuiz} courseId={props._id} sectionId={chosenSectionId} />
             <AddSection close={() => setShowAddSection(false)} show={showAddSection} courseId={props._id} />
+            <CourseSettings close={() => setShowSettings(false)} show={showSettings} courseId={props._id} />
             {
-                showAddVideo || showAddSection || showAddText || showAddQuiz ? (
-                    <Backdrop toggle={closeBackdrop} show={showAddVideo || showAddSection || showAddText || showAddQuiz} />
+                showAddVideo || showAddSection || showAddText || showAddQuiz || showSettings ? (
+                    <Backdrop toggle={closeBackdrop} show={showAddVideo || showAddSection || showAddText || showAddQuiz || showSettings} />
                 ) : null
             }
+            <FloatingButton click={() => setShowSettings(true)} backgroundColor="#13aa52">
+                <Build />
+            </FloatingButton>
         </Layout>
     </>
 }

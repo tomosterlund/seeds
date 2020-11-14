@@ -1,0 +1,36 @@
+.NavLessons {
+    display: flex;
+    flex-flow: column;
+}
+
+.NavLessons h3 {
+    margin: 16px 0 4px 0;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.LessonItem {
+    width: 100%;
+    margin: 0;
+    padding: 8px 0;
+    border-bottom: 1px solid gray;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.LessonItem:hover {
+    background-color: lightgray;
+}
+
+.Active {
+    margin: 0 0 0 8px;
+    background-color: lightgray;
+    overflow: hidden;
+}
+
+.LessonItem p {
+    margin: 0 0 0 16px;
+    font-size: 14px;
+}

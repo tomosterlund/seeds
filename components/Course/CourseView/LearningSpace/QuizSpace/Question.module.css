@@ -1,0 +1,26 @@
+.Question {
+    display: flex;
+    flex-flow: column;
+    width: 90%;
+}
+
+.Question h3 {
+    margin: 8px 0;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.Answer {
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0.1px;
+    margin: 8px 0;
+    padding: 8px;
+    cursor: pointer;
+    border-left: 3px solid #13aa52;
+    transition: background-color 0.2s linear;
+}
+
+.Answer:hover {
+    background-color: lightgray;
+}

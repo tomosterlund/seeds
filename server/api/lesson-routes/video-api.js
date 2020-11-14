@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const uploadVideo = require('./../../util/uploadVideo');
-const deleteVideo = require('./../../util/deleteVideo')
+const deleteMedia = require('./../../util/deleteMedia')
 const Course = require('./../../Models/Course');
 const Section = require('./../../Models/CourseSection');
 const Video = require('./../../Models/lessons/Video');
@@ -51,7 +51,7 @@ router.post(`/c-api/delete-video/:lessonId`, async (req, res) => {
     const sectionId = req.body.sectionId;
     try {
         const videoToDelete = await Video.findById(lessonId).lean();
-        await deleteVideo(videoToDelete.videoUrl);
+        await deleteMedia(videoToDelete.videoUrl);
         await Video.findByIdAndDelete(lessonId);
         const section = await deleteLessonInSection(lessonId, sectionId);
         await deleteLessonInCourse(section.courseId, lessonId);

@@ -1,0 +1,21 @@
+.FloatingButton {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    box-shadow: 0px 2px 4px 0px gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    font-weight: 900;
+    transition: all 0.2s linear;
+    cursor: pointer;
+}
+
+.FloatingButton:hover {
+    transform: scale(1.05);
+}

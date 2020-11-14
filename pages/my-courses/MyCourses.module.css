@@ -28,7 +28,7 @@
 
 .CourseContainer p {
     margin: 0 0 0 16px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 300;
 }
 
@@ -38,8 +38,10 @@
     right: 0;
     padding: 16px;
     cursor: pointer;
+    transition: all 0.2s linear;
 }
 
 .WrenchIconContainer:hover {
-    color: rgb(41, 41, 233);
+    color: #13aa52;
+    transform: scale(1.2);
 }

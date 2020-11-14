@@ -25,8 +25,13 @@ interface Props {
 }
 
 const MyCourses: React.FC<Props> = ({ myCourses }) => {
+
     const goToCourseEditor = (courseId: string) => {
         return Router.push(`/course/editor/${courseId}`);
+    }
+
+    const goToCourseView = (courseId: string) => {
+        Router.push(`/course/${courseId}`)
     }
 
     return<>
@@ -36,19 +41,22 @@ const MyCourses: React.FC<Props> = ({ myCourses }) => {
                 <SeedsHeader text="My Courses" />
             </div>
             {myCourses.map((c: courseInterface) => (
-                <div key={c._id} className={styles.CourseContainer}>
+                <div
+                    key={c._id}
+                    className={styles.CourseContainer}
+                >
                     <div
                         style={{ backgroundImage: `url('https://seeds-platform.s3.eu-central-1.amazonaws.com/${c.imageUrl}')` }}
                         className={styles.CourseImage}
                     />
-                    <p>
+                    <p onClick={() => goToCourseView(c._id)}>
                         {c.title}
                     </p>
                     <div
                         className={styles.WrenchIconContainer}
                         onClick={() => goToCourseEditor(c._id)}
                     >
-                        <Build />
+                        <Build fontSize="small" />
                     </div>
                 </div>
             ))}

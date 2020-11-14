@@ -1,0 +1,18 @@
+.QuizContainer {
+    margin: 16px;
+    width: 90%;
+    box-shadow: 1px 4px 10px gray;
+    display: flex;
+    flex-flow: column;
+    padding: 8px;
+}
+
+.QuizHeader {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid gray;
+}
+
+.QuizHeader h2 {
+    font-size: 16px;
+}

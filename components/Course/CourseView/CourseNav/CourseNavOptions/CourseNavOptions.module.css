@@ -1,0 +1,55 @@
+.CourseNavOptions {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    width: 100%;
+}
+
+.CourseNavOptions p {
+    margin: 0 16px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.2s linear;
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+}
+
+.HoverBox {
+    margin: 0 16px;
+    cursor: pointer;
+}
+
+.HoverBox::after {
+    display: block;
+    content: "";
+    height: 3px;
+    width: 100%;
+    background-color: transparent;
+    margin: 5px 0 0 0;
+    transition: all 0.2s linear;
+}
+
+.HoverBox:hover::after {
+    display: block;
+    content: "";
+    height: 3px;
+    width: 100%;
+    background-color: gray;
+    margin: 5px 0 0 0;
+}
+
+.Active {
+    margin: 0 16px;
+    cursor: pointer;
+}
+
+.Active::after {
+    display: block;
+    content: "";
+    height: 3px;
+    width: 100%;
+    background-color: gray;
+    margin: 5px 0 0 0;
+    transition: all 0.2s linear;
+}
