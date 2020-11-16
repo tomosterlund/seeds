@@ -1,11 +1,11 @@
-import React from 'react'
-import styles from './AddAnswer.module.css'
+// import React from 'react'
+// import styles from './AddAnswer.module.css'
 
-interface Props {}
+// interface Props {}
 
-const AddAnswer: React.FC<Props> = ({}) => {
-    return<>
-    </>
-}
+// const AddAnswer: React.FC<Props> = ({}) => {
+//     return<>
+//     </>
+// }
 
-export default AddAnswer;
+// export default AddAnswer;

@@ -1,0 +1,16 @@
+.QuestionOverview {
+    display: flex;
+    align-items: center;
+    margin: 0 0 8px 0;
+}
+
+.QNumber {
+    font-size: 15px;
+    font-weight: 500;
+    border-bottom: 3px solid gray;
+    margin: 0 8px;
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    transition: all 0.5s ease-out;
+}

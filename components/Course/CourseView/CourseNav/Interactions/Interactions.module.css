@@ -1,0 +1,21 @@
+.Interactions {
+    width: 100%;
+}
+
+.CreateComment {
+    display: flex;
+}
+
+.TextareaContainer {
+    position: relative;
+}
+
+.TextareaContainer .TextareaButton {
+    position: absolute;
+    top: 80px;
+    margin: 0 0 0 -16px;
+}
+
+.MessagesContainer {
+    margin: 48px 0 0 0;
+}

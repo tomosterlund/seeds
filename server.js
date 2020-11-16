@@ -39,6 +39,7 @@ mongoose.connect(dbURI, dodgeWarnings)
       server.use(require('./server/api/lesson-routes/video-api'));
       server.use(require('./server/api/lesson-routes/text-api'));
       server.use(require('./server/api/lesson-routes/quiz-api'));
+      server.use(require('./server/api/interaction-routes/lesson-interaction'));
     
       server.get('*', (req, res) => {
         return handle(req, res)

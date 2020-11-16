@@ -30,8 +30,14 @@ const MyCourses: React.FC<Props> = ({ myCourses }) => {
         return Router.push(`/course/editor/${courseId}`);
     }
 
-    const goToCourseView = (courseId: string) => {
-        Router.push(`/course/${courseId}`)
+    const goToCourseView = async (courseId: string) => {
+        try {
+            const lessonRequest = await axios.get(`/course/first-lesson/${courseId}`);
+            const firstLesson = lessonRequest.data.firstLesson;
+            Router.push(`/lesson/${firstLesson}`);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return<>

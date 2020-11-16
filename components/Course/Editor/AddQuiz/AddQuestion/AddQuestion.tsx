@@ -11,16 +11,8 @@ import { Clear } from '@material-ui/icons';
 import { isLongerThan } from './../../../../../util/form-validation/validating-strings'
 import axios from 'axios'
 
-interface Answer {
-    text: string;
-    correct: boolean;
-}
-
-interface QuestionObject {
-    lessonId: string;
-    question: string;
-    answers: [Answer?, Answer?, Answer?, Answer?];
-}
+import Answer from './../../../../../interfaces/LessonInterfaces/AnswerInterface'
+import QuestionObject from './../../../../../interfaces/LessonInterfaces/Question'
 
 interface Props {
     lessonId: string;
@@ -38,13 +30,13 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
         if (questionDoc && questionDoc.answers[2]) {
             return questionDoc.answers[2].text;
         }
-        return ''
+        return undefined
     });
     const [answer4, setAnswer4] = useState(() => {
         if (questionDoc && questionDoc.answers[3]) {
             return questionDoc.answers[3].text;
         }
-        return ''
+        return undefined
     });
     const [correctAnswer, setCorrectAnswer] = useState('');
 
@@ -139,7 +131,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                     </div>
 
                     {
-                        answer3 ? (
+                        answer3 !== undefined ? (
                             <div className={styles.AnswerContainer}>
                                 <FormControlLabel value={answer3} control={<Radio color="primary" />} label="" />
                                 <Textfield
@@ -149,8 +141,8 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                                 updateState={(event) => setAnswer3(event.target.value)}
                                 />
                                 {
-                                    !answer4 ? (
-                                        <div className={styles.ClearIcon} onClick={() => setAnswer3('')}>
+                                    answer4 === undefined ? (
+                                        <div className={styles.ClearIcon} onClick={() => setAnswer3(undefined)}>
                                             <Clear />
                                         </div>
                                     ) : null
@@ -160,7 +152,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                     }
 
                     {
-                        answer4 ? (
+                        answer4 !== undefined ? (
                             <div className={styles.AnswerContainer}>
                                 <FormControlLabel value={answer4} control={<Radio color="primary" />} label="" />
                                 <Textfield
@@ -169,7 +161,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                                 inputType="text"
                                 updateState={(event) => setAnswer4(event.target.value)}
                                 />
-                                <div className={styles.ClearIcon} onClick={() => setAnswer4('')}>
+                                <div className={styles.ClearIcon} onClick={() => setAnswer4(undefined)}>
                                     <Clear />
                                 </div>
                             </div>

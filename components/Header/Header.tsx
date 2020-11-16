@@ -11,7 +11,7 @@ const Header: React.FC<Props> = ({ activeNavItem, toggleSidedrawer }) => {
     return<>
         <header className={styles.Header}>
             <div className={styles.LogoContainer}>
-                <img src="/assets/images/seeding.svg" />
+                <img alt="Seeds logo" src="/assets/images/seeding.svg" />
                 <h1>Seeds</h1>
             </div>
             <Menu

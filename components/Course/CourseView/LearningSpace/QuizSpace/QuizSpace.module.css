@@ -9,10 +9,20 @@
 
 .QuizHeader {
     display: flex;
-    align-items: center;
+    flex-flow: column;
     border-bottom: 1px solid gray;
+}
+
+.QuizTitle {
+    display: flex;
+    align-items: center;
 }
 
 .QuizHeader h2 {
     font-size: 16px;
+}
+
+.FinishedView {
+    font-size: 20px;
+    margin: 16px auto;
 }

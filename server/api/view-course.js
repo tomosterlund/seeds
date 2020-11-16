@@ -99,4 +99,17 @@ router.get('/c-api/lesson/:lessonId', async (req, res) => {
     }
 });
 
+router.get('/course/first-lesson/:courseId', async (req, res) => {
+    const courseId = req.params.courseId;
+    try {
+        const course = await Course.findById(courseId).lean();
+        const firstSection = await CourseSection.findById(course.sections[0]).lean();
+        const firstLesson = firstSection.lessons[0].lessonId;
+        console.log(firstLesson);
+        res.json({ firstLesson });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 module.exports = router;

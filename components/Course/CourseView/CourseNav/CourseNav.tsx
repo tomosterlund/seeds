@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styles from './CourseNav.module.css'
 import CourseNavOptions from './CourseNavOptions/CourseNavOptions'
+import Interactions from './Interactions/Interactions';
 import NavLessons from './NavLessons/NavLessons';
 
 interface Props {
@@ -17,6 +18,10 @@ const CourseNav: React.FC<Props> = ({ sections, goToLesson }) => {
             
             {chosenOption === 'lessons' ? (
                 <NavLessons goToLesson={goToLesson} sections={sections} />
+            ) : null}
+
+            {chosenOption === 'chat' ? (
+                <Interactions />
             ) : null}
         </div>
     </>

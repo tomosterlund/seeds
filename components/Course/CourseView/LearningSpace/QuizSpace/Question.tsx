@@ -4,9 +4,10 @@ import styles from './Question.module.css'
 
 interface Props {
     question: QuestionInterface;
+    submitAnswer: (correct: boolean) => void;
 }
 
-const Question: React.FC<Props> = ({ question }) => {
+const Question: React.FC<Props> = ({ question, submitAnswer }) => {
     return<>
         <div className={styles.Question}>
             <h3>
@@ -14,9 +15,13 @@ const Question: React.FC<Props> = ({ question }) => {
             </h3>
             
             {question.answers.map((a, i) => (
-                <div className={styles.Answer} key={i}>
+                <button
+                    className={styles.Answer}
+                    key={i}
+                    onClick={() => submitAnswer(a.correct)}
+                >
                     {a.text}
-                </div>
+                </button>
             ))}
         </div>
     </>

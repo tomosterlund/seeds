@@ -13,3 +13,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+textarea {
+  margin: 4px 0;
+  resize: none;
+  font-family: 'Montserrat';
+  font-size: 14px;
+  padding: 8px;
+  line-height: 1.6;
+}
