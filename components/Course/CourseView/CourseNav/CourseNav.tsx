@@ -7,9 +7,10 @@ import NavLessons from './NavLessons/NavLessons';
 interface Props {
     sections: [],
     goToLesson: (lessonId: string, lessonType: string) => void;
+    courseAuthorId: string;
 }
 
-const CourseNav: React.FC<Props> = ({ sections, goToLesson }) => {
+const CourseNav: React.FC<Props> = ({ sections, goToLesson, courseAuthorId }) => {
     const [chosenOption, setChosenOption] = useState('lessons');
 
     return<>
@@ -21,7 +22,7 @@ const CourseNav: React.FC<Props> = ({ sections, goToLesson }) => {
             ) : null}
 
             {chosenOption === 'chat' ? (
-                <Interactions />
+                <Interactions courseAuthorId={courseAuthorId} />
             ) : null}
         </div>
     </>

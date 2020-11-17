@@ -115,7 +115,7 @@ const CourseView: React.FC<Props> = ({ courseData, sections, lessonType, videoDa
                         quizData={quizDataState}
                     />
 
-                    <CourseNav goToLesson={goToLesson} sections={sections} />
+                    <CourseNav courseAuthorId={courseData.authorId} goToLesson={goToLesson} sections={sections} />
                 </div>
             {/* </div> */}
         </Layout>

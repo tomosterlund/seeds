@@ -5,7 +5,11 @@ import SeedButton from '../../../../UI/SeedsButton/SeedButton';
 import Axios from 'axios';
 import LessonMessage from './LessonMessage';
 
-const Interactions: React.FC = () => {
+interface Props {
+    courseAuthorId: string;
+}
+
+const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
     const router = useRouter();
     const { lessonid } = router.query
 
@@ -18,7 +22,17 @@ const Interactions: React.FC = () => {
             const postedMessage = await Axios.post(`/c-api/lesson-message/${lessonid}`, { message });
             console.log(postedMessage);
             setLessonMessages(postedMessage.data.lessonMessages);
+            setMessage('');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+    const deleteMessage = async (messageId: string) => {
+        try {
+            const deletedMessage = await Axios.delete(`/c-api/lesson-message/${messageId}`);
+            console.log(deletedMessage);
+            setLessonMessages(deletedMessage.data.lessonMessages);
         } catch (error) {
             console.log(error);
         }
@@ -61,7 +75,7 @@ const Interactions: React.FC = () => {
             </div>
 
             {lessonMessages ? lessonMessages.map((lm: any, i: number) => (
-                <LessonMessage key={i} message={lm} />
+                <LessonMessage courseAuthorId={courseAuthorId} deleteMessage={deleteMessage} key={i} message={lm} />
             )) : null}
 
         </div>

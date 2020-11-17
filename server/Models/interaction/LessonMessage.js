@@ -29,7 +29,7 @@ const LessonMessageSchema = new Schema({
     voters: {
         type: Array
     }
-});
+}, { timestamps: true });
 
 const LessonMessageModel = mongoose.model('Lessonmessage', LessonMessageSchema);
 
