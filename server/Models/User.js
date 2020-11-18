@@ -32,6 +32,10 @@ const ContentCreatorSchema = new Schema({
     joinDate: {
         type: Date,
         default: Date.now()
+    },
+    verified: {
+        type: Boolean,
+        required: true
     }
 });
 

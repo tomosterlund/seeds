@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Router from 'next/router'
 import styles from './register.module.css'
 import Layout from './../../components/Layout/Layout'
@@ -9,6 +9,9 @@ import Textfield from './../../components/UI/Forms/Textfield/Textfield'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ImageUploadButton from './../../components/UI/Forms/ImageUploadButton/ImageUploadButton'
 import axios from 'axios'
+import ModalNormal from '../../components/UI/Modals/ModalNormal/ModalNormal'
+import SeedButton from './../../components/UI/SeedsButton/SeedButton'
+import Backdrop from '../../components/UI/Backdrop/Backdrop'
 
 class Register extends Component {
     private fileInput: React.RefObject<HTMLInputElement>
@@ -39,7 +42,8 @@ class Register extends Component {
         selectedFile: null,
         file: '',
         imagePreviewUrl: '',
-        loading: false
+        loading: false,
+        showModal: false
     }
 
     openFilePicker = () => {
@@ -87,12 +91,34 @@ class Register extends Component {
             fd.append('userData', stringifiedUser);
             const postedUser = await axios.post('/c-api/register', fd);
             console.log(postedUser);
+            const resetUser = {
+                name: {
+                    value: '',
+                    valid: false
+                },
+                email: {
+                    value: '',
+                    valid: false
+                },
+                password: {
+                    value: '',
+                    valid: false
+                },
+                pwConfirm: {
+                    value: '',
+                    valid: false
+                },
+            }
+            this.setState({ newUser: resetUser });
             this.setState({ loading: false });
-            Router.push('/login');
-            
+            this.setState({ showModal: true });
         } catch (error) {
             console.log(error);
         }
+    }
+
+    hideModal = () => {
+        this.setState({ showModal: false });
     }
 
     render() {
@@ -140,6 +166,18 @@ class Register extends Component {
                             !this.state.loading ? <SeedsButton image={true} text="Join now" /> : <CircularProgress color="primary" style={{ margin: '16px' }} />
                         }
                     </form>
+                    {this.state.showModal ? (
+                        <Fragment>
+                            <ModalNormal show={this.state.showModal}>
+                                <SeedsHeader text="Yay! Good call" />
+                                <p>
+                                    Now just one more step. Go to your email and click the link you received from us to finish your registration.
+                                </p>
+                                <SeedButton text="got it" image={true} click={this.hideModal} />
+                            </ModalNormal>
+                            <Backdrop show={this.state.showModal} toggle={this.hideModal} />
+                        </Fragment>
+                    ) : null}
                 </div>
             </Layout>
         </>

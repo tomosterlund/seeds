@@ -9,11 +9,16 @@ import SeedsButton from './../../components/UI/SeedsButton/SeedButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import styles from './LoginPage.module.css'
 import axios from 'axios'
+import ModalNormal from '../../components/UI/Modals/ModalNormal/ModalNormal'
+import Backdrop from '../../components/UI/Backdrop/Backdrop'
+import SeedButton from './../../components/UI/SeedsButton/SeedButton'
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loginError, setLoginError] = useState('');
+    const [showError, setShowError] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -22,7 +27,14 @@ const LoginPage: React.FC = () => {
         setLoading(true);
         try {
             const loginAttempt = await axios.post('/c-api/login', { email, password });
-            console.log(loginAttempt);
+
+            if (loginAttempt.data.loginError) {
+                setLoading(false);
+                setLoginError(loginAttempt.data.loginError);
+                return setShowError(true);
+            }
+
+            console.log(loginAttempt.data.loginError);
             dispatch(setSessionUser(loginAttempt.data.userData));
             setLoading(false);
             Router.push('/');
@@ -55,6 +67,14 @@ const LoginPage: React.FC = () => {
                     }
                 </div>
             </form>
+            <ModalNormal show={showError} >
+                <h2 style={{ margin: '0' }}>Login failed:</h2>
+                <p>
+                    {loginError}
+                </p>
+                <SeedButton click={() => setShowError(false)} text="ok" image={true} />
+            </ModalNormal>
+            <Backdrop show={showError} toggle={() => setShowError(false)} />
         </Layout>
     </>
 }
