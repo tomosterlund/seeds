@@ -1,0 +1,11 @@
+.SettingsPage {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.SettingsPage h2 {
+    display: flex;
+    align-items: center;
+}

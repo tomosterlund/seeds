@@ -105,6 +105,16 @@ router.get('/c-api/signout', (req, res) => {
     console.log('Route hit');
     req.session.destroy();
     res.json({ signoutSuccess: true });
+});
+
+router.get('/c-api/user/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await User.findById(userId).lean();
+        res.json({ user: user });
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 module.exports = router;

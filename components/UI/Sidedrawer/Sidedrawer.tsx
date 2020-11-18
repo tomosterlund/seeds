@@ -8,7 +8,8 @@ import {
     HouseDoorFill,
     PersonPlus,
     PlusSquare,
-    Book
+    Book,
+    Sliders
 } from 'react-bootstrap-icons'
 import axios from 'axios'
 import stateInterface from '../../../interfaces/stateInterface'
@@ -74,7 +75,12 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
             component: <Book />,
             text: 'My content',
             route: `/my-courses/${userId}`
-        }
+        },
+        {
+            component: <Sliders />,
+            text: 'Account settings',
+            route: `/settings/${userId}`
+        },
     ]
 
     return<>
