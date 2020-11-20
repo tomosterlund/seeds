@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
 
     const dispatch = useDispatch();
 
-    const loginHandler = async (event) => {
+    const loginHandler = async (event: any) => {
         event.preventDefault();
         setLoading(true);
         try {
@@ -41,6 +41,16 @@ const LoginPage: React.FC = () => {
         } catch (error) {
         console.log(error);
         }
+    }
+
+    const goToPasswordReset = (event: any) => {
+        event.preventDefault();
+        Router.push('/login/forgot-password');
+    }
+
+    const goToRegister = (event: any) => {
+        event.preventDefault();
+        Router.push('/register');
     }
 
     return<>
@@ -62,6 +72,19 @@ const LoginPage: React.FC = () => {
                     inputType="password"
                     updateState={(event) => setPassword(event.currentTarget.value)}
                     />
+                    <div className={styles.OptionsContainer}>
+                        <p
+                            onClick={(event) => goToPasswordReset(event)}
+                            className={styles.ForgotPassword}>
+                                Forgot password?
+                            </p>
+                        
+                        <p
+                            onClick={(event) => goToRegister(event)}
+                            className={styles.ForgotPassword}>
+                                Sign up
+                            </p>
+                    </div>
                     {
                         !loading ? <SeedsButton image={true} text="Enter" /> : <CircularProgress style={{ margin: '16px' }} />
                     }

@@ -16,8 +16,8 @@ const UserDisplay: React.FC<Props> = ({ close }) => {
     const signOutHandler = async () => {
         try {
             await axios.get('/c-api/signout');
+            Router.push('/login');
             window.location.reload();
-            Router.push('/');
         } catch (error) {
             console.log(error);
         }
@@ -37,7 +37,7 @@ const UserDisplay: React.FC<Props> = ({ close }) => {
                                 <div className={styles.UserOptions}>
                                     <p onClick={signOutHandler} style={{ margin: '0 8px 0 0' }}>Sign out</p>
                                     |
-                                    <p style={{ margin: '0 0 0 8px' }}>Settings</p>
+                                    <p onClick={() => Router.push(`/settings/${sessionUser._id}`)} style={{ margin: '0 0 0 8px' }}>Settings</p>
                                 </div>
                             </div>
                         </div>

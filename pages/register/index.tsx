@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import Router from 'next/router'
 import styles from './register.module.css'
 import Layout from './../../components/Layout/Layout'
 import RegistrationGreeting from './../../components/Presentational/RegistrationGreeting/RegistrationGreeting'
@@ -12,6 +11,9 @@ import axios from 'axios'
 import ModalNormal from '../../components/UI/Modals/ModalNormal/ModalNormal'
 import SeedButton from './../../components/UI/SeedsButton/SeedButton'
 import Backdrop from '../../components/UI/Backdrop/Backdrop'
+import { checkFileFormat } from './../../util/form-validation/file-format'
+import { Error } from '@material-ui/icons'
+import { validateRegistration } from './validateRegistration'
 
 class Register extends Component {
     private fileInput: React.RefObject<HTMLInputElement>
@@ -43,7 +45,9 @@ class Register extends Component {
         file: '',
         imagePreviewUrl: '',
         loading: false,
-        showModal: false
+        showModal: false,
+        correctMimetype: true,
+        formErrors: []
     }
 
     openFilePicker = () => {
@@ -67,6 +71,13 @@ class Register extends Component {
         }
 
         reader.readAsDataURL(file);
+
+        const mimetypeCheck = checkFileFormat(file.name, ['jpg', 'png', 'gif']);
+        if (!mimetypeCheck) {
+            this.setState({ correctMimetype: false });
+        } else if (mimetypeCheck) {
+            this.setState({ correctMimetype: true });
+        }
     }
 
     inputChangeHandler = (event, fieldName) => {
@@ -77,6 +88,18 @@ class Register extends Component {
 
     registrationHandler = async (event) => {
         event.preventDefault();
+
+        // Form validation
+        const formValidation = validateRegistration(
+            this.state.newUser.name.value,
+            this.state.newUser.email.value,
+            this.state.newUser.password.value,
+            this.state.newUser.pwConfirm.value,
+        )
+        if (formValidation.length !== 0) {
+            return this.setState({ formErrors: formValidation });
+        }
+
         this.setState({ loading: true });
         const userData = {
             name: this.state.newUser.name.value,
@@ -119,6 +142,19 @@ class Register extends Component {
 
     hideModal = () => {
         this.setState({ showModal: false });
+    }
+
+    dumpChosenFile = () => {
+        this.setState({
+            selectedFile: null,
+            file: '',
+            imagePreviewUrl: '',
+            correctMimetype: true
+        });
+    }
+
+    closeValidationErrors = () => {
+        this.setState({ formErrors: [] });
     }
 
     render() {
@@ -178,6 +214,45 @@ class Register extends Component {
                             <Backdrop show={this.state.showModal} toggle={this.hideModal} />
                         </Fragment>
                     ) : null}
+
+                    <ModalNormal show={!this.state.correctMimetype}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Error style={{ margin: '0 6px 0 0' }} />
+                            <h2 style={{ fontSize: '16px' }}>File type not supported</h2>
+                        </div>
+                        <p>You can upload images with the following formats:</p>
+                        <ul className={styles.FormatList}>
+                            <li>.jpg</li>
+                            <li>.png</li>
+                            <li>.gif</li>
+                        </ul>
+                        <SeedButton
+                            text="ok, got it!"
+                            image={false}
+                            click={this.dumpChosenFile}
+                        />
+                    </ModalNormal>
+                    <Backdrop toggle={this.dumpChosenFile} show={!this.state.correctMimetype} />
+
+                    <ModalNormal show={this.state.formErrors.length !== 0}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Error style={{ margin: '0 6px 0 0' }} />
+                            <h2 style={{ fontSize: '16px' }}>Validation errors:</h2>
+                        </div>
+                        <ul className={styles.FormatList}>
+                            {this.state.formErrors.map((e, i) => (
+                                <li key={i}>
+                                    {e}
+                                </li>
+                            ))}
+                        </ul>
+                        <SeedButton
+                            click={this.closeValidationErrors}
+                            text="ok, got it!"
+                            image={false}
+                        />
+                    </ModalNormal>
+                    <Backdrop show={this.state.formErrors.length !== 0} toggle={this.closeValidationErrors} />
                 </div>
             </Layout>
         </>

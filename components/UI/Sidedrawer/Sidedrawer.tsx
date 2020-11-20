@@ -24,16 +24,18 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
     let sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
     const [userId, setUserId] = useState('');
     const [setIdOnce, setSetIdOnce] = useState(false);
+    const [ranFetchSession, setRanFetchSession] = useState(false);
     const dispatch = useDispatch();
     
     useEffect(() => {
-        if (!sessionUser) {
+        if (!sessionUser && !ranFetchSession) {
             async function fetchSessionUser () {
                 const sessionUserAPI = await axios.get('/c-api/verified');
                 console.log('Executed API call')
                 dispatch(setSessionUser(sessionUserAPI.data.sessionUser));
             }
-            fetchSessionUser()
+            fetchSessionUser();
+            setRanFetchSession(true);
         }
 
         if (!setIdOnce && sessionUser) {

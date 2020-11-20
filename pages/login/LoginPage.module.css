@@ -10,3 +10,24 @@
     display: flex;
     flex-flow: column;
 }
+
+.OptionsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 300px;
+}
+
+.ForgotPassword {
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: 0;
+    border: 0;
+    background-color: white;
+    font-family: inherit;
+}
+
+.ForgotPassword:hover {
+    color: rgb(41, 41, 233);
+}

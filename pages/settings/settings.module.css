@@ -9,3 +9,18 @@
     display: flex;
     align-items: center;
 }
+
+.DetailContainer {
+    display: flex;
+    align-items: center;
+}
+
+.BuildIcon {
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.BuildIcon:hover {
+    transform: scale(1.1);
+    color: #13aa52;
+}

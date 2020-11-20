@@ -2,9 +2,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const User = require('./../Models/User');
+const Course = require('./../Models/Course');
+const LessonMessage = require('./../Models/interaction/LessonMessage')
 const uploadImage = require('./../util/uploadImage');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID);
+const deleteMedia = require('./../util/deleteMedia');
 
 router.post('/c-api/register', uploadImage(), async (req, res) => {
     const userData = JSON.parse(req.body.userData);
@@ -13,7 +16,7 @@ router.post('/c-api/register', uploadImage(), async (req, res) => {
     const userType = 'creator';
     const premiumUser = false;
     const verified = false;
-    let imageUrl = 'randomuser.jpg';
+    let imageUrl = 'randomuser.png';
     if (req.file) {
         imageUrl = req.file.key
     }
@@ -97,12 +100,11 @@ router.post('/c-api/login', async (req, res) => {
 })
 
 router.get('/c-api/verified', (req, res) => {
-    console.log('User authentication API ran on the server');
+    console.log('User verification API ran on the server');
     res.json({ sessionUser: req.session.user });
 });
 
 router.get('/c-api/signout', (req, res) => {
-    console.log('Route hit');
     req.session.destroy();
     res.json({ signoutSuccess: true });
 });
@@ -110,8 +112,50 @@ router.get('/c-api/signout', (req, res) => {
 router.get('/c-api/user/:userId', async (req, res) => {
     const userId = req.params.userId;
     try {
-        const user = await User.findById(userId).lean();
+        const user = await User.findById(userId, {
+            name: 1,
+            email: 1,
+            imageUrl: 1,
+            _id: 0
+        }).lean();
         res.json({ user: user });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/c-api/edit-user/:userId', uploadImage(), async (req, res) => {
+    const userId = req.params.userId;
+    const userData = JSON.parse(req.body.userData);
+    try {
+        const user = await User.findById(userId);
+        user.name = userData.name;
+        
+        // User-doc update
+        if (req.file) {
+            await deleteMedia(user.imageUrl);
+            user.imageUrl = req.file.key;
+        }
+
+        if (userData.email) {
+            user.email = userData.email;
+        }
+        
+        if (userData.password) {
+            const password = await bcrypt.hash(userData.password, 10);
+            user.password = password;
+        }
+
+        const savedUser = await user.save();
+
+        // Courses update
+        if (req.file) {
+            await Course.updateMany({ authorId: userId }, { $set: { authorImageUrl: req.file.key, authorName: userData.name } })
+        } else if (!req.file) {
+            await Course.updateMany({ authorId: userId }, { $set: { authorName: userData.name } })
+        }
+        
+        res.json({ savedData: true, userData: savedUser });
     } catch (error) {
         console.log(error);
     }

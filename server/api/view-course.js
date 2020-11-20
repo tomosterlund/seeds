@@ -30,7 +30,11 @@ router.get('/c-api/course/:courseId', async (req, res) => {
 router.get('/c-api/my-courses/:userId', async (req, res) => {
     const userId = req.params.userId;
     try {
-        const myCourses = await Course.find({ authorId: userId }).lean();
+        const myCourses = await Course.find({ authorId: userId }, {
+            title: 1,
+            imageUrl: 1,
+        }).lean();
+        console.log(myCourses);
         res.json({ myCourses });
     } catch (error) {
         console.log(error);

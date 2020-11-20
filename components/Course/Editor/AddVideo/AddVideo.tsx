@@ -2,12 +2,14 @@ import React, { Component, Fragment } from 'react'
 import Router from 'next/router'
 import styles from './AddVideo.module.css'
 import ModalLarge from './../../../UI/Modals/LargeModal/LargeModal'
-import { Movie, Publish } from '@material-ui/icons'
+import { Error, Movie, Publish } from '@material-ui/icons'
 import { CircularProgress } from '@material-ui/core'
 import Textfield from './../../../UI/Forms/Textfield/Textfield'
 import ImageUploadButton from './../../../UI/Forms/ImageUploadButton/ImageUploadButton'
 import AppButton from './../../../UI/SeedsButton/SeedButton'
 import axios from 'axios'
+import { checkFileFormat } from './../../../../util/form-validation/file-format'
+import SeedButton from './../../../UI/SeedsButton/SeedButton'
 
 interface Props {
     show: boolean;
@@ -22,6 +24,7 @@ interface State {
     file: any;
     imagePreviewUrl: any;
     loading: boolean;
+    correctMimetype: boolean;
 }
 
 class AddVideo extends Component<Props, State> {
@@ -37,6 +40,7 @@ class AddVideo extends Component<Props, State> {
         file: '',
         imagePreviewUrl: '',
         loading: false,
+        correctMimetype: true
     }
 
     inputChangeHandler = (event) => {
@@ -65,6 +69,22 @@ class AddVideo extends Component<Props, State> {
         }
 
         reader.readAsDataURL(file);
+
+        const mimetypeCheck = checkFileFormat(file.name, ['mp4', 'mov', 'wmv']);
+        if (!mimetypeCheck) {
+            this.setState({ correctMimetype: false });
+        } else if (mimetypeCheck) {
+            this.setState({ correctMimetype: true });
+        }
+    }
+
+    dumpChosenFile = () => {
+        this.setState({
+            selectedFile: null,
+            file: '',
+            imagePreviewUrl: '',
+            correctMimetype: true
+        });
     }
 
     postVideoHandler = async () => {
@@ -94,34 +114,56 @@ class AddVideo extends Component<Props, State> {
     render() {
         return<>
             <ModalLarge show={this.props.show}>
-                <div className={styles.AddVideoHeader}>
-                    <h2>Add video lesson</h2>
-                    <Movie />
-                </div>
-                <span style={{ margin: '8px 0 0 0' }}>
-                    <Textfield
-                    inputValue={this.state.title}
-                    placeholder="Pick a title for the video"
-                    label="Video title"
-                    inputType="text"
-                    fieldName="title"
-                    changeHandler={this.inputChangeHandler}
-                    />
-                </span>
-                <ImageUploadButton camera={false} chosenImage={this.state.file} openFileHandler={this.openFilePicker} text="Select a video">
-                    <Publish />
-                </ImageUploadButton>
-                <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
-                {
-                    !this.state.loading ? (
-                        <AppButton click={this.postVideoHandler} text="Upload video" image={false} />
-                    ) : (
-                        <Fragment>
-                            <CircularProgress style={{ margin: '16px' }} />
-                            <div className={styles.UploadPercentage}>Uploading - just a moment</div>
-                        </Fragment>
-                    )
-                }
+                {this.state.correctMimetype ? (
+                    <Fragment>
+                        <div className={styles.AddVideoHeader}>
+                            <h2>Add video lesson</h2>
+                            <Movie />
+                        </div>
+                        <span style={{ margin: '8px 0 0 0' }}>
+                            <Textfield
+                            inputValue={this.state.title}
+                            placeholder="Pick a title for the video"
+                            label="Video title"
+                            inputType="text"
+                            fieldName="title"
+                            changeHandler={this.inputChangeHandler}
+                            />
+                        </span>
+                        <ImageUploadButton camera={false} chosenImage={this.state.file} openFileHandler={this.openFilePicker} text="Select a video">
+                            <Publish />
+                        </ImageUploadButton>
+                        <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
+                        {
+                            !this.state.loading ? (
+                                <AppButton click={this.postVideoHandler} text="Upload video" image={false} />
+                            ) : (
+                                <Fragment>
+                                    <CircularProgress style={{ margin: '16px' }} />
+                                    <div className={styles.UploadPercentage}>Uploading - just a moment</div>
+                                </Fragment>
+                            )
+                        }
+                    </Fragment>
+                ) : (
+                    <Fragment>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Error style={{ margin: '0 6px 0 0' }} />
+                            <h2 style={{ fontSize: '16px' }}>File type not supported</h2>
+                        </div>
+                        <p>You can upload videos with the following formats:</p>
+                        <ul className={styles.FormatList}>
+                            <li>.mp4</li>
+                            <li>.mov</li>
+                            <li>.wmv</li>
+                        </ul>
+                        <SeedButton
+                            text="ok, got it!"
+                            image={false}
+                            click={this.dumpChosenFile}
+                        />
+                    </Fragment>
+                )}
             </ModalLarge>
         </>
     }
