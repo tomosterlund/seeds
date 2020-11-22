@@ -17,14 +17,6 @@ const VideoSchema = new Schema({
     authorId: {
         type: String,
         required: true
-    },
-    authorName: {
-        type: String,
-        required: true
-    },
-    authorImageUrl: {
-        type: String,
-        required: true
     }
 });
 

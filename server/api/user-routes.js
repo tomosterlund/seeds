@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const User = require('./../Models/User');
 const Course = require('./../Models/Course');
-const LessonMessage = require('./../Models/interaction/LessonMessage')
+const LessonMessage = require('./../Models/interaction/LessonMessage');
+const TTLdata = require('./../Models/TTLdata/TTLdata');
 const uploadImage = require('./../util/uploadImage');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID);
@@ -138,7 +139,28 @@ router.post('/c-api/edit-user/:userId', uploadImage(), async (req, res) => {
         }
 
         if (userData.email) {
-            user.email = userData.email;
+            const newTTLdoc = new TTLdata({
+                userId: userId,
+                newEmail: userData.email
+            });
+            await newTTLdoc.save();
+
+            const msg = {
+                to: userData.email, // Change to your recipient
+                from: 'tom.osterlund1@gmail.com', // Change to your verified sender
+                template_id: 'd-450bcdf6f641480087c0a8c9393b49fb',
+                dynamic_template_data: {
+                    userid: `${user._id}`
+                },
+            }
+            sgMail
+                .send(msg)
+                .then(() => {
+                    console.log('Email sent')
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         }
         
         if (userData.password) {
@@ -156,6 +178,28 @@ router.post('/c-api/edit-user/:userId', uploadImage(), async (req, res) => {
         }
         
         res.json({ savedData: true, userData: savedUser });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/c-api/verify-new-email/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const TTLdoc = await TTLdata.findOne({ userId: userId });
+        
+        if (TTLdoc) {
+            const user = await User.findById(TTLdoc.userId);
+            user.email = TTLdoc.newEmail;
+            await user.save();
+            await TTLdata.deleteOne({ _id: TTLdoc._id });
+            console.log('TTLdoc found');
+            console.log(user);
+
+            return res.json({ updateWorked: true, TTLdoc: user });
+        }
+
+        return res.json({ queryResult: 'No user found', updateWorked: false });
     } catch (error) {
         console.log(error);
     }

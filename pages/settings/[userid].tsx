@@ -39,6 +39,7 @@ interface State {
     file: any;
     imagePreviewUrl: any;
     loading: boolean;
+    verificationDisclaimer: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -87,7 +88,8 @@ class UserSettings extends Component<Props, State> {
         selectedFile: null,
         file: '',
         imagePreviewUrl: '',
-        loading: false
+        loading: false,
+        verificationDisclaimer: false
     }
 
     inputHandler = (event: any, fieldName: string) => {
@@ -143,7 +145,7 @@ class UserSettings extends Component<Props, State> {
             return this.setState({ ...newState });
         }
 
-        if (this.state.password.value.length < 7) {
+        if (this.state.password.value.length < 7 && this.state.password.showTextfield) {
             const newState = this.state;
             newState.password.valid = false;
             newState.loading = false;
@@ -156,6 +158,11 @@ class UserSettings extends Component<Props, State> {
             fd.append('image', this.state.selectedFile);
             const savedUser = await Axios.post(`/c-api/edit-user/${this.props._id}`, fd);
             this.setState({ loading: false });
+
+            if (this.state.email.value !== this.props.email) {
+                this.setState({ verificationDisclaimer: true });
+            }
+
             this.props.dispatch(setSessionUser(savedUser.data.userData));
             this.hideTextfields();
         } catch (error) {
@@ -282,6 +289,7 @@ class UserSettings extends Component<Props, State> {
                     ) : <CircularProgress style={{ margin: '16px 0 0 0' }} />}
 
                 </div>
+
                 <ModalNormal show={!this.state.password.valid}>
                         <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center' }}>
                             <Error fontSize="small" style={{ margin: '0 8px 0 0' }} />
@@ -289,6 +297,23 @@ class UserSettings extends Component<Props, State> {
                         </div>
                 </ModalNormal>
                 <Backdrop toggle={ this.togglePWModal } show={!this.state.password.valid} />
+
+                <ModalNormal show={this.state.verificationDisclaimer}>
+                    <h4>Go verify</h4>
+                    <p style={{ margin: '8px 0', textAlign: 'center' }}>
+                        Check your email! There you should have received a link for verifying your new email. Please note that the link is only valid for 5 minutes.
+                    </p>
+                    <p style={{ margin: '8px 0', fontStyle: 'italic', fontSize: '12px', textAlign: 'center' }}>
+                        If you can't see your email, please check your junk-folder.
+                    </p>
+
+                    <SeedButton
+                        text="ok, got it!"
+                        image={false}
+                        click={() => this.setState({ verificationDisclaimer: false })}
+                    />
+                </ModalNormal>
+                <Backdrop toggle={() => this.setState({ verificationDisclaimer: false })} show={this.state.verificationDisclaimer} />
             </Layout>
         </>
     }

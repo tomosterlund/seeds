@@ -18,14 +18,6 @@ const TextSchema = new Schema({
         type: String,
         required: true
     },
-    authorName: {
-        type: String,
-        required: true
-    },
-    authorImageUrl: {
-        type: String,
-        required: true
-    },
     views: {
         type: String,
         required: true
