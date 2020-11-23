@@ -11,6 +11,7 @@ import { PlusCircle } from 'react-bootstrap-icons'
 import AddQuestion from './AddQuestion/AddQuestion'
 import QuestionItem from './QuestionItem/QuestionItem'
 import axios from 'axios'
+import courseEditorLang from '../../../../util/language/pages/course-editor'
 
 const reorder = (list, startIndex, endIndex): any => {
     const result = Array.from(list);
@@ -27,6 +28,7 @@ interface Props {
 }
 
 const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [quizTitle, setQuizTitle] = useState('');
     const [quizDoc, setQuizDoc] = useState({ title: '', questionIds: [], _id: '' }); // Received upon submitting a quiz for the first time
     const [quizQuestions, setQuizQuestions] = useState([]);
@@ -123,25 +125,25 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
     return <>
         <ModalLarge show={show}>
             <div className={styles.HeaderDiv}>
-                <h2>{quizDoc.title ? quizDoc.title : 'Add Quiz'}</h2>
+                <h2>{quizDoc.title ? quizDoc.title : courseEditorLang[userLang].addQuizHeader}</h2>
                 <HelpOutline />
             </div>
             {
                 !quizDoc.title ? (
                     <Fragment>
                         <Textfield
-                            label="Quiz title"
-                            placeholder="Pick a title for your quiz"
+                            label={courseEditorLang[userLang].quizTitleInput}
+                            placeholder={courseEditorLang[userLang].quizTitlePh}
                             inputType="text"
                             inputValue={quizTitle}
                             updateState={updateTitleHandler}
                         />
-                        <SeedsButton click={submitQuizTitle} text="Done" image={false} />
+                        <SeedsButton click={submitQuizTitle} text={courseEditorLang[userLang].quizDoneBtn} image={false} />
                     </Fragment>
                 ) : (
                         <Fragment>
                             {!showAddQuestion ? (
-                                <SeedsButton click={() => setShowAddQuestion(true)} text="Add question" image={false}>
+                                <SeedsButton click={() => setShowAddQuestion(true)} text={courseEditorLang[userLang].addQuestionBtn} image={false}>
                                     <PlusCircle style={{ margin: '0 8px 0 0' }} />
                                 </SeedsButton>
                             ) : null}
@@ -157,7 +159,7 @@ const AddQuiz: React.FC<Props> = ({ sectionId, courseId, close, show }) => {
                                 />
                             ) : null}
 
-                            {quizQuestions.length < 1 && !showAddQuestion ? <p><i>No questions here yet</i></p> : null}
+                            {quizQuestions.length < 1 && !showAddQuestion ? <p><i>{courseEditorLang[userLang].noQuestionsyet}</i></p> : null}
                             <div
                                 className={styles.DroppableContainer}
                             >

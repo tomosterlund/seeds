@@ -4,6 +4,9 @@ import styles from './Interactions.module.css'
 import SeedButton from '../../../../UI/SeedsButton/SeedButton';
 import Axios from 'axios';
 import LessonMessage from './LessonMessage';
+import { useSelector } from 'react-redux';
+import stateInterface from '../../../../../interfaces/stateInterface';
+import courseViewLang from '../../../../../util/language/pages/course-view';
 
 interface Props {
     courseAuthorId: string;
@@ -12,6 +15,7 @@ interface Props {
 const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
     const router = useRouter();
     const { lessonid } = router.query
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
 
     const [fetchedData, setFetchedData] = useState(false);
     const [message, setMessage] = useState('');
@@ -63,7 +67,7 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
                     <div className={styles.TextareaButton}>
                         <SeedButton
                             click={submitMessage}
-                            text="reply to lesson"
+                            text={courseViewLang[userLang].replyToLesson}
                             image={false}
                         />
                     </div>

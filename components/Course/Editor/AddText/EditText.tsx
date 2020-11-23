@@ -6,6 +6,9 @@ import { Editor } from '@tinymce/tinymce-react'
 import SeedsButton from './../../../UI/SeedsButton/SeedButton'
 import SeedsHeader from './../../../Presentational/SeedsHeader/SeedsHeader'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../../interfaces/stateInterface'
+import courseEditorLang from '../../../../util/language/pages/course-editor'
 
 interface Props {
     show: boolean;
@@ -15,6 +18,7 @@ interface Props {
 }
 
 const EditText: React.FC<Props> = ({ show, lessonId, textContent, close }) => {
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [TinyMCEContent, setTinyMCEContent] = useState('');
     const handleEditorChange = (content: any, editor: any) => {
         setTinyMCEContent(content);
@@ -39,7 +43,7 @@ const EditText: React.FC<Props> = ({ show, lessonId, textContent, close }) => {
     return <>
         <ModalLarge show={show}>
             <div style={{ margin: '0 0 16px 0' }}>
-                <SeedsHeader text="Edit text" />
+                <SeedsHeader text={courseEditorLang[userLang].editTextHdr} />
             </div>
             <Editor
                 apiKey='xz2pzqz9zwzcekk7psj8ho9kc6huj4rcqw2qflv5a03v1diu'
@@ -59,7 +63,7 @@ const EditText: React.FC<Props> = ({ show, lessonId, textContent, close }) => {
                 value={TinyMCEContent}
                 onEditorChange={handleEditorChange}
             />
-            <SeedsButton click={saveChangesHandler} text="Save changes" image={false} />
+            <SeedsButton click={saveChangesHandler} text={courseEditorLang[userLang].saveTextChanges} image={false} />
         </ModalLarge>
     </>
 }

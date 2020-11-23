@@ -13,7 +13,8 @@ import { setSessionUser } from './../../store/actions/sessionAction'
 import { Build, Error } from '@material-ui/icons'
 import ModalNormal from '../../components/UI/Modals/ModalNormal/ModalNormal'
 import Backdrop from '../../components/UI/Backdrop/Backdrop'
-import { isLongerThan } from './../../util/form-validation/validating-strings'
+import stateInterface from '../../interfaces/stateInterface'
+import userSettingsLang from '../../util/language/user/account-settings'
 
 interface Props {
     name: string;
@@ -22,6 +23,7 @@ interface Props {
     password: string;
     _id: string;
     dispatch: (user: any) => any;
+    userLang: string;
 }
 
 interface formInputState {
@@ -184,17 +186,17 @@ class UserSettings extends Component<Props, State> {
 
     render() {
         return<>
-            <Layout title="Account settings | Seeds">
+            <Layout title={userSettingsLang[this.props.userLang].pageTitle}>
                 <div className={styles.SettingsPage}>
                     <h2>
                         <Sliders style={{ margin: '0 8px 0 0' }} />
-                        Account settings
+                        {userSettingsLang[this.props.userLang].title}
                     </h2>
 
                     {this.state.name.showTextfield ? (
                         <Textfield
-                            placeholder="Your name"
-                            label="Name"
+                            placeholder={userSettingsLang[this.props.userLang].namePlaceholder}
+                            label={userSettingsLang[this.props.userLang].name}
                             inputType="text"
                             inputValue={this.state.name.value}
                             fieldName="name"
@@ -203,7 +205,7 @@ class UserSettings extends Component<Props, State> {
                     ) : (
                         <Fragment>
                             <div className={styles.DetailContainer}>
-                                <p>Name: {this.state.name.value}</p>
+                                <p>{userSettingsLang[this.props.userLang].name}: {this.state.name.value}</p>
                                 <div
                                     onClick={() => this.toggleTextfield('name')}
                                     className={styles.BuildIcon}
@@ -216,8 +218,8 @@ class UserSettings extends Component<Props, State> {
 
                     {this.state.email.showTextfield ? (
                         <Textfield
-                            placeholder="Your email"
-                            label="Email"
+                            placeholder={userSettingsLang[this.props.userLang].emailPlaceholder}
+                            label={userSettingsLang[this.props.userLang].email}
                             inputType="email"
                             inputValue={this.state.email.value}
                             fieldName="email"
@@ -226,7 +228,7 @@ class UserSettings extends Component<Props, State> {
                     ) : (
                         <Fragment>
                             <div className={styles.DetailContainer}>
-                                <p>Email: {this.state.email.value}</p>
+                                <p>{userSettingsLang[this.props.userLang].email}: {this.state.email.value}</p>
                                 <div
                                     onClick={() => this.toggleTextfield('email')}
                                     className={styles.BuildIcon}
@@ -240,8 +242,8 @@ class UserSettings extends Component<Props, State> {
                     {this.state.password.showTextfield ? (
                         <Fragment>
                             <Textfield
-                                placeholder="Your password"
-                                label="Password"
+                                placeholder={userSettingsLang[this.props.userLang].passwordPlaceholder}
+                                label={userSettingsLang[this.props.userLang].password}
                                 inputType="password"
                                 inputValue={this.state.password.value}
                                 fieldName="password"
@@ -249,8 +251,8 @@ class UserSettings extends Component<Props, State> {
                             />
 
                             <Textfield
-                                placeholder="Confirm your password"
-                                label="Confirm password"
+                                placeholder={userSettingsLang[this.props.userLang].pwConfirmPlaceholder}
+                                label={userSettingsLang[this.props.userLang].pwConfirm}
                                 inputType="password"
                                 inputValue={this.state.pwConfirm.value}
                                 fieldName="pwConfirm"
@@ -261,7 +263,7 @@ class UserSettings extends Component<Props, State> {
                     ) : (
                         <Fragment>
                             <div className={styles.DetailContainer}>
-                                <p>Password: *********</p>
+                                <p>{userSettingsLang[this.props.userLang].password}: *********</p>
                                 <div
                                     onClick={() => this.toggleTextfield('password')}
                                     className={styles.BuildIcon}
@@ -274,7 +276,7 @@ class UserSettings extends Component<Props, State> {
 
                     <ImageUploadButton
                         camera={true}
-                        text="New image"
+                        text={userSettingsLang[this.props.userLang].newImage}
                         openFileHandler={this.openFilePicker}
                         chosenImage={this.state.file}
                     />
@@ -282,7 +284,7 @@ class UserSettings extends Component<Props, State> {
 
                     {!this.state.loading ? (
                         <SeedButton
-                            text="Save changes"
+                            text={userSettingsLang[this.props.userLang].save}
                             image={false}
                             click={this.saveChanges}
                         />
@@ -319,4 +321,8 @@ class UserSettings extends Component<Props, State> {
     }
 }
 
-export default connect()(UserSettings);
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+  });
+
+export default connect(mapStateToProps)(UserSettings);

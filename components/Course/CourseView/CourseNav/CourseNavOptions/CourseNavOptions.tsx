@@ -1,5 +1,8 @@
 import { Chat } from '@material-ui/icons'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../../../interfaces/stateInterface'
+import courseViewLang from '../../../../../util/language/pages/course-view'
 import styles from './CourseNavOptions.module.css'
 
 interface Props {
@@ -8,6 +11,9 @@ interface Props {
 }
 
 const CourseNavOptions: React.FC<Props> = ({ pickNavOption, activeOption }) => {
+
+    const userlang = useSelector((state: stateInterface) => state.languageReducer.language);
+
     return<>
         <div className={styles.CourseNavOptions}>
             <div
@@ -16,7 +22,7 @@ const CourseNavOptions: React.FC<Props> = ({ pickNavOption, activeOption }) => {
                 style={{margin: '0 16px 0 -8px'}}
             >
                 <p>
-                    Lessons
+                    {courseViewLang[userlang].lessonsOpt}
                 </p>
             </div>
             <div

@@ -1,4 +1,7 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
+import stateInterface from '../../../../interfaces/stateInterface';
+import selectLang from '../../../../util/language/components/forms/select';
 import styles from './../Textfield/Textfield.module.css'
 
 interface Props {
@@ -9,6 +12,9 @@ interface Props {
 }
 
 const Select: React.FC<Props> = ({ inputValue, label, changeHandler, fieldName }) => {
+
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
+
     return<>
         <div className={styles.TextfieldContainer}>
             <label>{label}</label>
@@ -18,13 +24,13 @@ const Select: React.FC<Props> = ({ inputValue, label, changeHandler, fieldName }
             value={inputValue} 
             name="cars"
             >
-                <option value="languages">Languages</option>
-                <option value="maths">Maths</option>
-                <option value="science">Science</option>
-                <option value="geography">Geography</option>
-                <option value="music">Music</option>
-                <option value="sports">Sports</option>
-                <option value="other">Other</option>
+                <option value="languages">{selectLang[userLang].languages}</option>
+                <option value="maths">{selectLang[userLang].maths}</option>
+                <option value="science">{selectLang[userLang].science}</option>
+                <option value="geography">{selectLang[userLang].geography}</option>
+                <option value="music">{selectLang[userLang].music}</option>
+                <option value="sports">{selectLang[userLang].sports}</option>
+                <option value="other">{selectLang[userLang].other}</option>
             </select>
         </div>
     </>

@@ -77,7 +77,14 @@ router.post('/c-api/login', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const user = await User.findOne({ email }).lean();
+        const user = await User.findOne({ email }, {
+            name: 1,
+            imageUrl: 1,
+            _id: 1,
+            verified: 1,
+            password: 1,
+            language: 1
+        }).lean();
 
         if (!user) {
             return res.json({ loginError: 'No user with such an e-mail' });
@@ -100,8 +107,13 @@ router.post('/c-api/login', async (req, res) => {
     }
 })
 
-router.get('/c-api/verified', (req, res) => {
+router.get('/c-api/verified', async (req, res) => {
     console.log('User verification API ran on the server');
+    if (req.session.user) {
+        const user = await User.findById(req.session.user._id);
+        return res.json({ sessionUser: user }); 
+
+    }
     res.json({ sessionUser: req.session.user });
 });
 
@@ -117,6 +129,7 @@ router.get('/c-api/user/:userId', async (req, res) => {
             name: 1,
             email: 1,
             imageUrl: 1,
+            language: 1,
             _id: 0
         }).lean();
         res.json({ user: user });
@@ -138,7 +151,7 @@ router.post('/c-api/edit-user/:userId', uploadImage(), async (req, res) => {
             user.imageUrl = req.file.key;
         }
 
-        if (userData.email) {
+        if (userData.email !== user.email) {
             const newTTLdoc = new TTLdata({
                 userId: userId,
                 newEmail: userData.email

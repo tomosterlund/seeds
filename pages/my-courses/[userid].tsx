@@ -7,6 +7,9 @@ import courseInterface from './../../interfaces/courseInterface'
 import SeedsHeader from '../../components/Presentational/SeedsHeader/SeedsHeader'
 import { Build } from '@material-ui/icons'
 import Router from 'next/router'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../interfaces/stateInterface'
+import myCoursesLang from '../../util/language/pages/my-courses'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const userId = ctx.params.userid;
@@ -26,6 +29,8 @@ interface Props {
 
 const MyCourses: React.FC<Props> = ({ myCourses }) => {
 
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
+
     const goToCourseEditor = (courseId: string) => {
         return Router.push(`/course/editor/${courseId}`);
     }
@@ -41,10 +46,10 @@ const MyCourses: React.FC<Props> = ({ myCourses }) => {
     }
 
     return<>
-    <Layout title="My courses | Seeds">
+    <Layout title={myCoursesLang[userLang].pageTitle}>
         <div className={styles.PageContainer}>
             <div className={styles.HeaderContainer}>
-                <SeedsHeader text="My Courses" />
+                <SeedsHeader text={myCoursesLang[userLang].myCoursesHdr} />
             </div>
             {myCourses.map((c: courseInterface) => (
                 <div
@@ -70,7 +75,5 @@ const MyCourses: React.FC<Props> = ({ myCourses }) => {
     </Layout>
     </>
 }
-
-
 
 export default MyCourses;

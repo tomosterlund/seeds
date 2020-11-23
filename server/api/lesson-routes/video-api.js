@@ -25,9 +25,7 @@ router.post('/c-api/course/:courseId/add-video', uploadVideo(), async (req, res)
             title: title,
             videoUrl: videoUrl,
             courseId: courseId,
-            authorId: req.session.user._id,
-            authorName: req.session.user.name,
-            authorImageUrl: req.session.user.imageUrl
+            authorId: req.session.user._id
         });
         const savedVideo = await newVideo.save()
         const lessonId = String(savedVideo._id);

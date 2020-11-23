@@ -15,8 +15,6 @@ router.post('/c-api/course/:courseId/add-text', async (req, res) => {
     const title = reqBody.title;
     const content = reqBody.content;
     const authorId = req.session.user._id;
-    const authorName = req.session.user.name;
-    const authorImageUrl = req.session.user.imageUrl;
     const views = 0;
     const popularity = 0;
     try {
@@ -26,8 +24,6 @@ router.post('/c-api/course/:courseId/add-text', async (req, res) => {
             content,
             courseId,
             authorId,
-            authorName,
-            authorImageUrl,
             views,
             popularity
         })

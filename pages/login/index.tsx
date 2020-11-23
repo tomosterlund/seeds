@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Router from 'next/router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setSessionUser } from './../../store/actions/sessionAction'
+import { setLanguage } from './../../store/actions/setLanguage'
 import Layout from './../../components/Layout/Layout'
 import SeedsHeader from './../../components/Presentational/SeedsHeader/SeedsHeader'
 import Textfield from './../../components/UI/Forms/Textfield/TextfieldFC'
@@ -12,8 +13,11 @@ import axios from 'axios'
 import ModalNormal from '../../components/UI/Modals/ModalNormal/ModalNormal'
 import Backdrop from '../../components/UI/Backdrop/Backdrop'
 import SeedButton from './../../components/UI/SeedsButton/SeedButton'
+import stateInterface from '../../interfaces/stateInterface'
+import loginLang from '../../util/language/pages/login'
 
 const LoginPage: React.FC = () => {
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -36,6 +40,7 @@ const LoginPage: React.FC = () => {
 
             console.log(loginAttempt.data.loginError);
             dispatch(setSessionUser(loginAttempt.data.userData));
+            dispatch(setLanguage(loginAttempt.data.userData.language))
             setLoading(false);
             Router.push('/');
         } catch (error) {
@@ -54,20 +59,20 @@ const LoginPage: React.FC = () => {
     }
 
     return<>
-        <Layout title ="Login | Seeds">
+        <Layout title={loginLang[userLang].pageTitle}>
             <form onSubmit={loginHandler} className={styles.LoginForm}>
                 <div className={styles.LoginPage}>
-                    <SeedsHeader text="Sign in" />
+                    <SeedsHeader text={loginLang[userLang].loginHdr} />
                     <Textfield
-                    placeholder="Enter your e-mail"
-                    label="E-mail"
+                    placeholder={loginLang[userLang].emailPh}
+                    label={loginLang[userLang].emailInput}
                     inputValue={email}
                     inputType="email"
                     updateState={(event) => setEmail(event.currentTarget.value)}
                     />
                     <Textfield
-                    placeholder="Enter your password"
-                    label="Password"
+                    placeholder={loginLang[userLang].passwordPh}
+                    label={loginLang[userLang].passwordInput}
                     inputValue={password}
                     inputType="password"
                     updateState={(event) => setPassword(event.currentTarget.value)}
@@ -76,26 +81,26 @@ const LoginPage: React.FC = () => {
                         <p
                             onClick={(event) => goToPasswordReset(event)}
                             className={styles.ForgotPassword}>
-                                Forgot password?
+                                {loginLang[userLang].forgotPw}
                             </p>
                         
                         <p
                             onClick={(event) => goToRegister(event)}
                             className={styles.ForgotPassword}>
-                                Sign up
+                                {loginLang[userLang].signUp}
                             </p>
                     </div>
                     {
-                        !loading ? <SeedsButton image={true} text="Enter" /> : <CircularProgress style={{ margin: '16px' }} />
+                        !loading ? <SeedsButton image={true} text={loginLang[userLang].Btn} /> : <CircularProgress style={{ margin: '16px' }} />
                     }
                 </div>
             </form>
             <ModalNormal show={showError} >
-                <h2 style={{ margin: '0' }}>Login failed:</h2>
+                <h2 style={{ margin: '0' }}>{loginLang[userLang].errorHdr}:</h2>
                 <p>
                     {loginError}
                 </p>
-                <SeedButton click={() => setShowError(false)} text="ok" image={true} />
+                <SeedButton click={() => setShowError(false)} text={loginLang[userLang].errorOk} image={true} />
             </ModalNormal>
             <Backdrop show={showError} toggle={() => setShowError(false)} />
         </Layout>

@@ -2,6 +2,9 @@ import React from 'react'
 import styles from './LessonOptions.module.css'
 import ModalMini from './../../../../UI/Modals/ModalMini/ModalMini'
 import { Title, Delete, Edit } from '@material-ui/icons'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../../../interfaces/stateInterface'
+import courseEditorLang from '../../../../../util/language/pages/course-editor'
 
 interface Props {
     showOptions: boolean;
@@ -14,6 +17,9 @@ interface Props {
 }
 
 const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteLesson, lessonType, lessonId, fetchTextContent, fetchQuiz }) => {
+
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
+
     return <>
         <ModalMini
             show={showOptions}
@@ -22,22 +28,22 @@ const LessonOptions: React.FC<Props> = ({ showOptions, openLessonEditor, deleteL
             {lessonType === 'text' ? (
                 <div onClick={fetchTextContent} className={styles.ModalListItem}>
                     <Edit />
-                    <p>Edit text</p>
+                    <p>{courseEditorLang[userLang].editTextOpt}</p>
                 </div>
             ) : null}
             {lessonType === 'quiz' ? (
                 <div onClick={fetchQuiz} className={styles.ModalListItem}>
                     <Edit />
-                    <p>Edit quiz</p>
+                    <p>{courseEditorLang[userLang].editQuizOpt}</p>
                 </div>
             ) : null}
             <div onClick={openLessonEditor} className={styles.ModalListItem}>
                 <Title />
-                <p>Change title</p>
+                <p>{courseEditorLang[userLang].changeTitle}</p>
             </div>
             <div onClick={deleteLesson} className={styles.ModalListItem}>
                 <Delete />
-                <p>Delete lesson</p>
+                <p>{courseEditorLang[userLang].deleteLesson}</p>
             </div>
             
         </ModalMini>

@@ -14,8 +14,15 @@ import Backdrop from '../../components/UI/Backdrop/Backdrop'
 import { checkFileFormat } from './../../util/form-validation/file-format'
 import { Error } from '@material-ui/icons'
 import { validateRegistration } from './validateRegistration'
+import stateInterface from '../../interfaces/stateInterface'
+import { connect } from 'react-redux'
+import registrationLang from '../../util/language/pages/registration'
 
-class Register extends Component {
+interface Props {
+    userLang: string;
+}
+
+class Register extends Component<Props> {
     private fileInput: React.RefObject<HTMLInputElement>
     constructor(props) {
         super(props);
@@ -95,6 +102,7 @@ class Register extends Component {
             this.state.newUser.email.value,
             this.state.newUser.password.value,
             this.state.newUser.pwConfirm.value,
+            this.props.userLang
         )
         if (formValidation.length !== 0) {
             return this.setState({ formErrors: formValidation });
@@ -159,57 +167,57 @@ class Register extends Component {
 
     render() {
         return<>
-            <Layout title="Register | Seeds">
+            <Layout title={registrationLang[this.props.userLang].pageTitle}>
                 <div className={styles.RegistrationPage}>
                     <RegistrationGreeting />
                     <form encType="multipart/form-data" className={styles.Form} onSubmit={this.registrationHandler}>
-                        <SeedsHeader text="Register" />
+                        <SeedsHeader text={registrationLang[this.props.userLang].registerHdr} />
                         <Textfield
                         inputValue={this.state.newUser.name.value}
-                        label="Name"
+                        label={registrationLang[this.props.userLang].nameInput}
                         inputType="text"
-                        placeholder="Type your name"
+                        placeholder={registrationLang[this.props.userLang].namePh}
                         fieldName="name"
                         changeHandler={this.inputChangeHandler}
                         />
                         <Textfield
                         inputValue={this.state.newUser.email.value}
-                        label="E-mail"
+                        label={registrationLang[this.props.userLang].emailInput}
                         inputType="email"
-                        placeholder="Type your e-mail address"
+                        placeholder={registrationLang[this.props.userLang].emailPh}
                         fieldName="email"
                         changeHandler={this.inputChangeHandler}
                         />
                         <Textfield
                         inputValue={this.state.newUser.password.value}
-                        label="Password"
+                        label={registrationLang[this.props.userLang].passwordInput}
                         inputType="password"
-                        placeholder="Choose a password"
+                        placeholder={registrationLang[this.props.userLang].passwordPh}
                         fieldName="password"
                         changeHandler={this.inputChangeHandler}
                         />
                         <Textfield
                         inputValue={this.state.newUser.pwConfirm.value}
-                        label="Confirm password"
+                        label={registrationLang[this.props.userLang].pwConfirmInput}
                         inputType="password"
-                        placeholder="Type your password again"
+                        placeholder={registrationLang[this.props.userLang].pwConfirmPh}
                         fieldName="pwConfirm"
                         changeHandler={this.inputChangeHandler}
                         />
-                        <ImageUploadButton camera={true} text="Upload image" chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
+                        <ImageUploadButton camera={true} text={registrationLang[this.props.userLang].imageUpload} chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
                         <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
                         {
-                            !this.state.loading ? <SeedsButton image={true} text="Join now" /> : <CircularProgress color="primary" style={{ margin: '16px' }} />
+                            !this.state.loading ? <SeedsButton image={true} text={registrationLang[this.props.userLang].joinBtn} /> : <CircularProgress color="primary" style={{ margin: '16px' }} />
                         }
                     </form>
                     {this.state.showModal ? (
                         <Fragment>
                             <ModalNormal show={this.state.showModal}>
-                                <SeedsHeader text="Yay! Good call" />
+                                <SeedsHeader text={registrationLang[this.props.userLang].verificationHdr} />
                                 <p>
-                                    Now just one more step. Go to your email and click the link you received from us to finish your registration.
+                                    {registrationLang[this.props.userLang].verificationTxt}
                                 </p>
-                                <SeedButton text="got it" image={true} click={this.hideModal} />
+                                <SeedButton text={registrationLang[this.props.userLang].verificationBtn} image={true} click={this.hideModal} />
                             </ModalNormal>
                             <Backdrop show={this.state.showModal} toggle={this.hideModal} />
                         </Fragment>
@@ -218,16 +226,16 @@ class Register extends Component {
                     <ModalNormal show={!this.state.correctMimetype}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Error style={{ margin: '0 6px 0 0' }} />
-                            <h2 style={{ fontSize: '16px' }}>File type not supported</h2>
+                            <h2 style={{ fontSize: '16px' }}>{registrationLang[this.props.userLang].fileErrorHdr}</h2>
                         </div>
-                        <p>You can upload images with the following formats:</p>
+                        <p>{registrationLang[this.props.userLang].fileErrorTxt}:</p>
                         <ul className={styles.FormatList}>
                             <li>.jpg</li>
                             <li>.png</li>
                             <li>.gif</li>
                         </ul>
                         <SeedButton
-                            text="ok, got it!"
+                            text={registrationLang[this.props.userLang].fileErrorBtn}
                             image={false}
                             click={this.dumpChosenFile}
                         />
@@ -237,7 +245,7 @@ class Register extends Component {
                     <ModalNormal show={this.state.formErrors.length !== 0}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Error style={{ margin: '0 6px 0 0' }} />
-                            <h2 style={{ fontSize: '16px' }}>Validation errors:</h2>
+                            <h2 style={{ fontSize: '16px' }}>{registrationLang[this.props.userLang].validationErrHdr}:</h2>
                         </div>
                         <ul className={styles.FormatList}>
                             {this.state.formErrors.map((e, i) => (
@@ -248,7 +256,7 @@ class Register extends Component {
                         </ul>
                         <SeedButton
                             click={this.closeValidationErrors}
-                            text="ok, got it!"
+                            text={registrationLang[this.props.userLang].validationErrBtn}
                             image={false}
                         />
                     </ModalNormal>
@@ -259,4 +267,8 @@ class Register extends Component {
     }
 }
 
-export default Register;
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+})
+
+export default connect(mapStateToProps)(Register);

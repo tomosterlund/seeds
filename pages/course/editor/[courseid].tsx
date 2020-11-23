@@ -19,6 +19,7 @@ import Sections from './../../../components/Course/Editor/Sections/Sections'
 import FloatingButton from '../../../components/UI/FloatingButton/FloatingButton'
 import { Build } from '@material-ui/icons'
 import CourseSettings from '../../../components/Course/Editor/CourseSettings/CourseSettings'
+import courseEditorLang from '../../../util/language/pages/course-editor'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const courseId = context.params.courseid;
@@ -50,7 +51,8 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
     const [showAddText, setShowAddText] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const showAddQuiz = useSelector((state: stateInterface) => state.showQuizEditor.showQuizEditor);
-    const [chosenSectionId, setChosenSectionId] = useState(''); // To be passed as prop to addLessonModal
+    const [chosenSectionId, setChosenSectionId] = useState(''); // To be passed as prop to addLessonModal;
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language)
     
     const dispatch = useDispatch();
     const closeBackdrop = () => {
@@ -79,18 +81,18 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
     }
 
     return<>
-        <Layout title="Course editor | Seeds">
+        <Layout title={courseEditorLang[userLang].pageTitle}>
             <div className={styles.CourseEditor}>
                 <div className={styles.CoursePresentation}>
                     <div className={styles.CourseImage} style={{ backgroundImage: `url('https://seeds-platform.s3.eu-central-1.amazonaws.com/${props.imageUrl}')` }} />
                     <div className={styles.PresentationTexts}>
                         <h2>{props.title}</h2>
-                        <p> Created at: {props.creationDate.substring(0, 10)}</p>
+                        <p>{courseEditorLang[userLang].createdAt}: {props.creationDate.substring(0, 10)}</p>
                     </div>
                 </div>
                 <AppButton 
                 image={false} 
-                text="Add new section"
+                text={courseEditorLang[userLang].addSection}
                 click={() => setShowAddSection(true)}
                 >
                     <PlusCircle style={{ margin: '0 6px 0 0' }} />

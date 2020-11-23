@@ -36,6 +36,10 @@ const ContentCreatorSchema = new Schema({
     verified: {
         type: Boolean,
         required: true
+    },
+    language: {
+        type: String,
+        required: false
     }
 });
 

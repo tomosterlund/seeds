@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styles from './AddSection.module.css'
 import Modal from './../../../UI/Modals/ModalNormal/ModalNormal'
 import SeedsHeader from './../../../Presentational/SeedsHeader/SeedsHeader'
 import Textfield from './../../../UI/Forms/Textfield/TextfieldMini'
@@ -7,6 +6,9 @@ import AppButton from './../../../UI/SeedsButton/SeedButton'
 import { PlusCircle } from 'react-bootstrap-icons'
 import axios from 'axios'
 import Router from 'next/router'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../../interfaces/stateInterface'
+import courseEditorLang from '../../../../util/language/pages/course-editor'
 
 interface Props {
     show: boolean;
@@ -16,16 +18,15 @@ interface Props {
 
 const AddSection: React.FC<Props> = ({ show, courseId, close }) => {
     const [sectionTitle, setSectionTitle] = useState('');
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language)
 
     const updateSectionTitle = (event) => {
         setSectionTitle(event.target.value);
     }
 
     const createSectionHandler = async () => {
-        console.log('Created section');
         try {
             const createdSection = await axios.post(`/c-api/course/${courseId}/add-section`, {sectionTitle});
-            console.log(createdSection);
             close();
             setSectionTitle('');
             Router.push(`/course/editor/${courseId}`);
@@ -36,16 +37,16 @@ const AddSection: React.FC<Props> = ({ show, courseId, close }) => {
 
     return<>
         <Modal show={show}>
-            <SeedsHeader text="Create a section" />
+            <SeedsHeader text={courseEditorLang[userLang].addSectionHeader} />
             <div style={{ margin: '16px 0 0 0', width: '100%' }}>
                 <Textfield
                 inputValue={sectionTitle}
-                placeholder="Choose a title for the section"
+                placeholder={courseEditorLang[userLang].addSectionPh}
                 inputType="text"
                 updateState={updateSectionTitle}
                 />
             </div>
-            <AppButton click={createSectionHandler} text="Add section" image={false}>
+            <AppButton click={createSectionHandler} text={courseEditorLang[userLang].sectionDoneBtn} image={false}>
                 <PlusCircle style={{ margin: '0 6px 0 0' }} />
             </AppButton>
         </Modal>

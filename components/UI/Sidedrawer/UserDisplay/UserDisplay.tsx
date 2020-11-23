@@ -5,6 +5,7 @@ import styles from './UserDisplay.module.css'
 import stateInterface from '../../../../interfaces/stateInterface'
 import { Clear } from '@material-ui/icons';
 import axios from 'axios'
+import sidebarLang from './../../../../util/language/sidebar'
 
 interface Props {
     close: () => void;
@@ -12,6 +13,7 @@ interface Props {
 
 const UserDisplay: React.FC<Props> = ({ close }) => {
     let sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
+    let userLang = useSelector((state: stateInterface) => state.languageReducer.language);
 
     const signOutHandler = async () => {
         try {
@@ -35,9 +37,13 @@ const UserDisplay: React.FC<Props> = ({ close }) => {
                             <div className={styles.TextContainer}>
                                 <p>{sessionUser.name}</p>
                                 <div className={styles.UserOptions}>
-                                    <p onClick={signOutHandler} style={{ margin: '0 8px 0 0' }}>Sign out</p>
+                                    <p onClick={signOutHandler} style={{ margin: '0 8px 0 0' }}>
+                                        {sidebarLang[userLang].signout}
+                                    </p>
                                     |
-                                    <p onClick={() => Router.push(`/settings/${sessionUser._id}`)} style={{ margin: '0 0 0 8px' }}>Settings</p>
+                                    <p onClick={() => Router.push(`/settings/${sessionUser._id}`)} style={{ margin: '0 0 0 8px' }}>
+                                        {sidebarLang[userLang].settings}
+                                    </p>
                                 </div>
                             </div>
                         </div>

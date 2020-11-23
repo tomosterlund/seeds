@@ -14,6 +14,8 @@ import {
 import axios from 'axios'
 import stateInterface from '../../../interfaces/stateInterface'
 import UserDisplay from './UserDisplay/UserDisplay'
+import sidebarLang from './../../../util/language/sidebar'
+import { setLanguage } from '../../../store/actions/setLanguage'
 
 interface Props {
     open: Boolean;
@@ -22,6 +24,7 @@ interface Props {
 
 const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
     let sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
+    let userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [userId, setUserId] = useState('');
     const [setIdOnce, setSetIdOnce] = useState(false);
     const [ranFetchSession, setRanFetchSession] = useState(false);
@@ -33,6 +36,9 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
                 const sessionUserAPI = await axios.get('/c-api/verified');
                 console.log('Executed API call')
                 dispatch(setSessionUser(sessionUserAPI.data.sessionUser));
+                if (sessionUserAPI.data.sessionUser) {
+                    dispatch(setLanguage(sessionUserAPI.data.sessionUser.language))
+                }
             }
             fetchSessionUser();
             setRanFetchSession(true);
@@ -47,43 +53,47 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
     const menuItemsUnAuth = [
         {
             component: <HouseDoorFill />,
-            text: 'Home',
+            text: sidebarLang[userLang].home,
             route: '/'
         },
         {
             component: <BoxArrowInRight />,
-            text: 'Sign in',
+            text: sidebarLang[userLang].login,
             route: '/login'
         },
         {
             component: <PersonPlus />,
-            text: 'Register',
+            text: sidebarLang[userLang].register,
             route: '/register'
         }
     ]
 
-    const menuItemsAuth = [
-        {
-            component: <HouseDoorFill />,
-            text: 'Home',
-            route: '/'
-        },
-        {
-            component: <PlusSquare />,
-            text: 'Create content',
-            route: '/course/create-new'
-        },
-        {
-            component: <Book />,
-            text: 'My content',
-            route: `/my-courses/${userId}`
-        },
-        {
-            component: <Sliders />,
-            text: 'Account settings',
-            route: `/settings/${userId}`
-        },
-    ]
+    let menuItemsAuth = [];
+
+    if (sessionUser) {
+        menuItemsAuth = [
+            {
+                component: <HouseDoorFill />,
+                text: sidebarLang[userLang].home,
+                route: '/'
+            },
+            {
+                component: <PlusSquare />,
+                text: sidebarLang[userLang].createContent,
+                route: '/course/create-new'
+            },
+            {
+                component: <Book />,
+                text: sidebarLang[userLang].myContent,
+                route: `/my-courses/${userId}`
+            },
+            {
+                component: <Sliders />,
+                text: sidebarLang[sessionUser.language].accountSettings,
+                route: `/settings/${userId}`
+            },
+        ]
+    }
 
     return<>
         <div className={open ? [styles.Sidedrawer, styles.Show].join(' ') : [styles.Sidedrawer, styles.Hide].join(' ')}>

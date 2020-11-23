@@ -18,8 +18,6 @@ router.post('/c-api/create-quiz', async (req, res) => {
             title: title,
             courseId: courseId,
             authorId: req.session.user._id,
-            authorName: req.session.user.name,
-            authorImageUrl: req.session.user.imageUrl,
             views: 0,
             popularity: 0
         });

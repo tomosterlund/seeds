@@ -7,12 +7,16 @@ import { Editor } from '@tinymce/tinymce-react'
 import SeedsButton from './../../../UI/SeedsButton/SeedButton'
 import { Subject } from '@material-ui/icons'
 import axios from 'axios'
+import stateInterface from '../../../../interfaces/stateInterface'
+import courseEditorLang from '../../../../util/language/pages/course-editor'
+import { connect } from 'react-redux'
 
 interface Props {
     show: boolean;
     courseId: string;
     sectionId: string;
     close: () => void;
+    userLang: string;
 }
 
 interface State {
@@ -61,13 +65,13 @@ class AddText extends Component<Props, State> {
         return <>
             <ModalLarge show={this.props.show}>
                 <div className={styles.AddTextHeader}>
-                    <h2>Add text</h2>
+                    <h2>{courseEditorLang[this.props.userLang].textHeader}</h2>
                     <Subject />
                 </div>
                 <div style={{ margin: '0 0 16px 0' }}>
                     <Textfield
-                    label="Text title"
-                    placeholder="Pick a title for your lesson"
+                    label={courseEditorLang[this.props.userLang].titleInputLabel}
+                    placeholder={courseEditorLang[this.props.userLang].titleInputPh}
                     inputType="text"
                     inputValue={this.state.title}
                     fieldName="title"
@@ -77,7 +81,7 @@ class AddText extends Component<Props, State> {
                 </div>
                 <Editor
                     apiKey='xz2pzqz9zwzcekk7psj8ho9kc6huj4rcqw2qflv5a03v1diu'
-                    initialValue="<p>Enter your text here</p>"
+                    initialValue={courseEditorLang[this.props.userLang].editorInitialValue}
                     init={{
                         height: 500,
                         menubar: false,
@@ -93,10 +97,14 @@ class AddText extends Component<Props, State> {
                     }}
                     onEditorChange={this.handleEditorChange}
                 />
-                <SeedsButton click={this.postText} text="done" image={false} />
+                <SeedsButton click={this.postText} text={courseEditorLang[this.props.userLang].textDoneButton} image={false} />
             </ModalLarge>
         </>
     }
 }
 
-export default AddText;
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+})
+
+export default connect(mapStateToProps)(AddText);

@@ -13,6 +13,9 @@ import axios from 'axios'
 
 import Answer from './../../../../../interfaces/LessonInterfaces/AnswerInterface'
 import QuestionObject from './../../../../../interfaces/LessonInterfaces/Question'
+import { useSelector } from 'react-redux';
+import stateInterface from '../../../../../interfaces/stateInterface';
+import courseEditorLang from '../../../../../util/language/pages/course-editor';
 
 interface Props {
     lessonId: string;
@@ -23,9 +26,10 @@ interface Props {
 }
 
 const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, questionId, questionDoc }) => {
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [question, setQuestion] = useState(questionDoc ? questionDoc.question : '');
-    const [answer1, setAnswer1] = useState(questionDoc ? questionDoc.answers[0].text : 'Answer 1');
-    const [answer2, setAnswer2] = useState(questionDoc ? questionDoc.answers[1].text : 'Answer 2');
+    const [answer1, setAnswer1] = useState(questionDoc ? questionDoc.answers[0].text : courseEditorLang[userLang].answer1);
+    const [answer2, setAnswer2] = useState(questionDoc ? questionDoc.answers[1].text : courseEditorLang[userLang].answer2);
     const [answer3, setAnswer3] = useState(() => {
         if (questionDoc && questionDoc.answers[2]) {
             return questionDoc.answers[2].text;
@@ -68,9 +72,9 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
     }
 
     const addAnswerHandler = () => {
-        if (!answer3 && !answer4) {return setAnswer3('Answer 3')}
-        if (answer3 && !answer4) {return setAnswer4('Answer 4')}
-        if (!answer3 && answer4) {return setAnswer3('Answer 3')}
+        if (!answer3 && !answer4) {return setAnswer3(courseEditorLang[userLang].answer3)}
+        if (answer3 && !answer4) {return setAnswer4(courseEditorLang[userLang].answer4)}
+        if (!answer3 && answer4) {return setAnswer3(courseEditorLang[userLang].answer3)}
     }
 
     const postQuestion = async () => {
@@ -98,7 +102,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
     return<>
         <div className={styles.AddQuestion}>
             <div className={styles.QuestionInputContainer}>
-                <h3>{mode.charAt(0).toUpperCase() + mode.slice(1)} question</h3>
+                <h3>{mode === 'add' ? courseEditorLang[userLang].addQuestionHdr : courseEditorLang[userLang].editQuestionHdr}</h3>
                 <textarea
                 value={question}
                 onChange={setQuestionHandler}
@@ -114,7 +118,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                         <FormControlLabel value={answer1} control={<Radio color="primary" />} label="" />
                         <Textfield
                         inputValue={answer1}
-                        placeholder="Enter an answer here"
+                        placeholder={courseEditorLang[userLang].answerPh}
                         inputType="text"
                         updateState={(event) => setAnswer1(event.target.value)}
                         />
@@ -124,7 +128,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                         <FormControlLabel value={answer2} control={<Radio color="primary" />} label="" />
                         <Textfield
                         inputValue={answer2}
-                        placeholder="Enter an answer here"
+                        placeholder={courseEditorLang[userLang].answerPh}
                         inputType="text"
                         updateState={(event) => setAnswer2(event.target.value)}
                         />
@@ -136,7 +140,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                                 <FormControlLabel value={answer3} control={<Radio color="primary" />} label="" />
                                 <Textfield
                                 inputValue={answer3}
-                                placeholder="Enter an answer here"
+                                placeholder={courseEditorLang[userLang].answerPh}
                                 inputType="text"
                                 updateState={(event) => setAnswer3(event.target.value)}
                                 />
@@ -157,7 +161,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                                 <FormControlLabel value={answer4} control={<Radio color="primary" />} label="" />
                                 <Textfield
                                 inputValue={answer4}
-                                placeholder="Enter an answer here"
+                                placeholder={courseEditorLang[userLang].answerPh}
                                 inputType="text"
                                 updateState={(event) => setAnswer4(event.target.value)}
                                 />
@@ -173,7 +177,7 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
                 !answer3 || !answer4 ? (
                     <div onClick={addAnswerHandler} className={styles.AddAnswerOption}>
                         <PlusCircle />
-                        <p>Add another answer</p>
+                        <p>{courseEditorLang[userLang].addAnswer}</p>
                     </div>
                 ) : null
             }
@@ -181,13 +185,13 @@ const AddQuestion: React.FC<Props> = ({ lessonId, closeShowAddQuestion, mode, qu
             <div className={styles.ButtonsContainer}>
                 <SeedButton
                 image={false}
-                text="Save question"
+                text={courseEditorLang[userLang].saveQuestion}
                 click={postQuestion}
                 />
                 <div onClick={() => closeShowAddQuestion(lessonId)}>
                     <SeedButton
                     image={false}
-                    text={mode === 'add' ? 'Discard' : 'Discard changes'}
+                    text={mode === 'add' ? courseEditorLang[userLang].discard : courseEditorLang[userLang].discardChanges}
                     backgroundColor="red">
                         <TrashFill style={{ margin: '0 8px 0 0' }} />
                     </SeedButton>

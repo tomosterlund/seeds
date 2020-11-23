@@ -8,6 +8,9 @@ import TextfieldMini from '../Forms/Textfield/TextfieldMini';
 import MiniButton from '../SeedsButton/MiniButton';
 import ModalMini from './../Modals/ModalMini/ModalMini'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../interfaces/stateInterface'
+import courseEditorLang from '../../../util/language/pages/course-editor'
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
@@ -36,6 +39,7 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
     const [newTitle, setNewTitle] = useState('');
     const [toggleTitleInput, setToggleTitleInput] = useState(false);
     const [showSectionOptions, toggleSectionOptions] = useState(false);
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
 
     const toggleExpanded = () => {
         setExpanded(!expanded);
@@ -53,11 +57,8 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
     }
 
     const deleteSection = async () => {
-        console.log('Ran delete section function');
         try {
             const deletedSection = await axios.delete(`/c-api/section/${sectionId}`);
-            console.log(deletedSection);
-            console.log('Delete sectionfunction finished');
             Router.push(`/course/editor/${courseId}`);
         } catch (error) {
             console.log(error);
@@ -91,11 +92,11 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
                                         <ModalMini position="left" show={showSectionOptions}>
                                             <div onClick={() => setToggleTitleInput(true)} className={moreStyles.ModalListItem}>
                                                 <Title />
-                                                Edit section title
+                                                {courseEditorLang[userLang].editSection}
                                             </div>
                                             <div onClick={deleteSection} className={moreStyles.ModalListItem}>
                                                 <Delete />
-                                                Delete section
+                                                {courseEditorLang[userLang].deleteSection}
                                             </div>
                                         </ModalMini>
                                     </div>
@@ -104,12 +105,12 @@ const Accordion: React.FC<Props> = ({ sectionTitle, children, sectionId, section
                                 <Fragment>
                                     <TextfieldMini
                                     inputType="text"
-                                    placeholder="Type new section title"
+                                    placeholder={courseEditorLang[userLang].editSectionPh}
                                     inputValue={newTitle}
                                     updateState={(event) => setNewTitle(event.target.value)}
                                     />
                                     <div onClick={changeSectionTitle} className={styles.EditTitleButton}>
-                                        <MiniButton text="save title" />
+                                        <MiniButton text={courseEditorLang[userLang].editSectionBtn} />
                                     </div>
                                 </Fragment>
                             )}

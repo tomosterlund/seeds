@@ -9,8 +9,23 @@ import ImageUploadButton from './../../../components/UI/Forms/ImageUploadButton/
 import Select from './../../../components/UI/Forms/Select/Select'
 import { CircularProgress } from '@material-ui/core'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import stateInterface from '../../../interfaces/stateInterface'
+import createCourseLang from '../../../util/language/course-editor/create-course'
 
-class CreateCourse extends Component {
+interface Props {
+    userLang: string;
+}
+
+interface State {
+    course: any;
+    selectedFile: any;
+    file: any;
+    imagePreviewUrl: any;
+    loading: boolean;
+}
+
+class CreateCourse extends Component<Props, State> {
     private fileInput: React.RefObject<HTMLInputElement>
     constructor(props) {
         super(props);
@@ -85,29 +100,29 @@ class CreateCourse extends Component {
 
     render() {
         return<>
-            <Layout title="Create new course | Seeds">
+            <Layout title={createCourseLang[this.props.userLang].pageTitle}>
                 <div className={styles.CreateCoursePage}>
-                    <SeedsHeader text="Create new course" />
+                    <SeedsHeader text={createCourseLang[this.props.userLang].header} />
                     <form className={styles.Form} onSubmit={this.createCourseHandler}>
                         <TextField
                         inputValue={this.state.course.title.value}
-                        placeholder="Enter the title of the course here"
-                        label="Course title"
+                        placeholder={createCourseLang[this.props.userLang].titlePh}
+                        label={createCourseLang[this.props.userLang].titleField}
                         fieldName="title"
                         inputType="text"
                         changeHandler={this.inputChangeHandler}
                         />
                         <Select
                         inputValue={this.state.course.category.value}
-                        label="Category"
+                        label={createCourseLang[this.props.userLang].categoryField}
                         changeHandler={this.inputChangeHandler}
                         fieldName="category"
                         />
-                        <ImageUploadButton camera={true} text="Course image" chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
+                        <ImageUploadButton camera={true} text={createCourseLang[this.props.userLang].uploadText} chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
                         <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
                         {
                             !this.state.loading ? (
-                                <AppButton text="Create course" image={false} />
+                                <AppButton text={createCourseLang[this.props.userLang].button} image={false} />
                             ) : <CircularProgress style={{ margin: '16px 0 0 0' }} />
                         }
                         
@@ -118,4 +133,8 @@ class CreateCourse extends Component {
     }
 }
 
-export default CreateCourse;
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+  });
+
+export default connect(mapStateToProps)(CreateCourse);

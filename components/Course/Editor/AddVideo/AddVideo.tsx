@@ -10,12 +10,16 @@ import AppButton from './../../../UI/SeedsButton/SeedButton'
 import axios from 'axios'
 import { checkFileFormat } from './../../../../util/form-validation/file-format'
 import SeedButton from './../../../UI/SeedsButton/SeedButton'
+import stateInterface from '../../../../interfaces/stateInterface'
+import { connect } from 'react-redux'
+import courseEditorLang from '../../../../util/language/pages/course-editor'
 
 interface Props {
     show: boolean;
     sectionId: string;
     courseId: string;
     close: () => void;
+    userLang: string;
 }
 
 interface State {
@@ -117,30 +121,30 @@ class AddVideo extends Component<Props, State> {
                 {this.state.correctMimetype ? (
                     <Fragment>
                         <div className={styles.AddVideoHeader}>
-                            <h2>Add video lesson</h2>
+                            <h2>{courseEditorLang[this.props.userLang].addVideoHeader}</h2>
                             <Movie />
                         </div>
                         <span style={{ margin: '8px 0 0 0' }}>
                             <Textfield
                             inputValue={this.state.title}
-                            placeholder="Pick a title for the video"
-                            label="Video title"
+                            placeholder={courseEditorLang[this.props.userLang].videoTitlePh}
+                            label={courseEditorLang[this.props.userLang].videoTitleLabel}
                             inputType="text"
                             fieldName="title"
                             changeHandler={this.inputChangeHandler}
                             />
                         </span>
-                        <ImageUploadButton camera={false} chosenImage={this.state.file} openFileHandler={this.openFilePicker} text="Select a video">
+                        <ImageUploadButton camera={false} chosenImage={this.state.file} openFileHandler={this.openFilePicker} text={courseEditorLang[this.props.userLang].videoUpload}>
                             <Publish />
                         </ImageUploadButton>
                         <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
                         {
                             !this.state.loading ? (
-                                <AppButton click={this.postVideoHandler} text="Upload video" image={false} />
+                                <AppButton click={this.postVideoHandler} text={courseEditorLang[this.props.userLang].doneButton} image={false} />
                             ) : (
                                 <Fragment>
                                     <CircularProgress style={{ margin: '16px' }} />
-                                    <div className={styles.UploadPercentage}>Uploading - just a moment</div>
+                                    <div className={styles.UploadPercentage}>{courseEditorLang[this.props.userLang].progress}</div>
                                 </Fragment>
                             )
                         }
@@ -149,16 +153,16 @@ class AddVideo extends Component<Props, State> {
                     <Fragment>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Error style={{ margin: '0 6px 0 0' }} />
-                            <h2 style={{ fontSize: '16px' }}>File type not supported</h2>
+                            <h2 style={{ fontSize: '16px' }}>{courseEditorLang[this.props.userLang].errorHeader}</h2>
                         </div>
-                        <p>You can upload videos with the following formats:</p>
+                        <p>{courseEditorLang[this.props.userLang].errorText}:</p>
                         <ul className={styles.FormatList}>
                             <li>.mp4</li>
                             <li>.mov</li>
                             <li>.wmv</li>
                         </ul>
                         <SeedButton
-                            text="ok, got it!"
+                            text={courseEditorLang[this.props.userLang].gotitButton}
                             image={false}
                             click={this.dumpChosenFile}
                         />
@@ -169,4 +173,8 @@ class AddVideo extends Component<Props, State> {
     }
 }
 
-export default AddVideo;
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+})
+
+export default connect(mapStateToProps)(AddVideo);

@@ -7,11 +7,15 @@ import SeedButton from "../../../UI/SeedsButton/SeedButton";
 import axios from 'axios'
 import Router from "next/router";
 import { CircularProgress } from "@material-ui/core";
+import stateInterface from "../../../../interfaces/stateInterface";
+import { connect } from "react-redux";
+import courseEditorLang from "../../../../util/language/pages/course-editor";
 
 interface Props {
     show: boolean;
     courseId: string;
     close: () => void;
+    userLang: string;
 }
 
 interface State {
@@ -86,10 +90,10 @@ class CourseSettings extends Component<Props, State> {
     render() {
         return<>
             <ModalLarge show={this.props.show}>
-                <SeedsHeader text="Edit course" />
+                <SeedsHeader text={courseEditorLang[this.props.userLang].editCourseHdr} />
                 <Textfield
-                    label="Title"
-                    placeholder="Enter a course title"
+                    label={courseEditorLang[this.props.userLang].editCourseTitle}
+                    placeholder={courseEditorLang[this.props.userLang].editCourseTitlePh}
                     inputValue={this.state.courseTitle}
                     inputType="text"
                     changeHandler={this.textInputHandler}
@@ -97,13 +101,13 @@ class CourseSettings extends Component<Props, State> {
                 />
                 <ImageUploadButton
                     openFileHandler={this.openFilePicker}
-                    text="Change image"
+                    text={courseEditorLang[this.props.userLang].changeImage}
                     camera={true}
                     chosenImage={this.state.file}
                 />
                 <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
                 {!this.state.loading ? (
-                    <SeedButton click={this.saveChanges} text="save changes" image={false} />
+                    <SeedButton click={this.saveChanges} text={courseEditorLang[this.props.userLang].saveCourseEdits} image={false} />
                 ) : (
                     <CircularProgress style={{ margin: '8px 0 0 0' }} />
                 )}
@@ -112,4 +116,8 @@ class CourseSettings extends Component<Props, State> {
     }
 }
 
-export default CourseSettings;
+const mapStateToProps = (state: stateInterface) => ({
+    userLang: state.languageReducer.language
+})
+
+export default connect(mapStateToProps)(CourseSettings);
