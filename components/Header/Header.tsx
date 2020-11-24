@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
 import { Menu, Public } from '@material-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
@@ -7,6 +7,7 @@ import langAbbreviation from './langAbbreviation'
 import ModalMini from '../UI/Modals/ModalMini/ModalMini'
 import Axios from 'axios'
 import { setLanguage } from '../../store/actions/setLanguage'
+import Cookies from 'js-cookie'
 
 interface Props {
     activeNavItem?: String;
@@ -15,10 +16,21 @@ interface Props {
 
 const Header: React.FC<Props> = ({ activeNavItem, toggleSidedrawer }) => {
 
+    const [ranUseEffect, setRanUseEffect] = useState(false);
     const dispatch = useDispatch();
     const sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
     const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [showLanguageList, setShowLanguageList] = useState(false);
+
+    useEffect(() => {
+        if (!sessionUser && !ranUseEffect) {
+            const languageCookie = Cookies.get('seedsLanguage');
+            if (languageCookie) {
+                setNewLanguage(languageCookie);
+            }
+            setRanUseEffect(true);
+        }
+    })
 
     const toggleLanguageList = () => {
         setShowLanguageList(!showLanguageList);
@@ -29,10 +41,11 @@ const Header: React.FC<Props> = ({ activeNavItem, toggleSidedrawer }) => {
     const setNewLanguage = async (lang: string) => {
         try {
             if (sessionUser) {
-                const setLang = await Axios.post('/c-api/set-language', { language: lang });
-                console.log(setLang);
+                await Axios.post('/c-api/set-language', { language: lang });
             }
-            dispatch(setLanguage(lang))
+            
+            Cookies.set('seedsLanguage', lang, { expires: 365 });
+            dispatch(setLanguage(lang));
         } catch (error) {
             console.log(error);
         }

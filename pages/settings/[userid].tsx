@@ -301,16 +301,16 @@ class UserSettings extends Component<Props, State> {
                 <Backdrop toggle={ this.togglePWModal } show={!this.state.password.valid} />
 
                 <ModalNormal show={this.state.verificationDisclaimer}>
-                    <h4>Go verify</h4>
+                    <h4>{userSettingsLang[this.props.userLang].goVerifyHdr}</h4>
                     <p style={{ margin: '8px 0', textAlign: 'center' }}>
-                        Check your email! There you should have received a link for verifying your new email. Please note that the link is only valid for 5 minutes.
+                        {userSettingsLang[this.props.userLang].goVerifyTxt}
                     </p>
                     <p style={{ margin: '8px 0', fontStyle: 'italic', fontSize: '12px', textAlign: 'center' }}>
-                        If you can't see your email, please check your junk-folder.
+                        {userSettingsLang[this.props.userLang].goVerifyTxt2}
                     </p>
 
                     <SeedButton
-                        text="ok, got it!"
+                        text={userSettingsLang[this.props.userLang].goVerifyBtn}
                         image={false}
                         click={() => this.setState({ verificationDisclaimer: false })}
                     />

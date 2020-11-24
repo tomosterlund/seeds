@@ -15,6 +15,7 @@ import Backdrop from '../../components/UI/Backdrop/Backdrop'
 import SeedButton from './../../components/UI/SeedsButton/SeedButton'
 import stateInterface from '../../interfaces/stateInterface'
 import loginLang from '../../util/language/pages/login'
+import Cookies from 'js-cookie'
 
 const LoginPage: React.FC = () => {
     const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
@@ -34,13 +35,25 @@ const LoginPage: React.FC = () => {
 
             if (loginAttempt.data.loginError) {
                 setLoading(false);
-                setLoginError(loginAttempt.data.loginError);
+
+                switch (loginAttempt.data.loginError) {
+                    case 'email':
+                        setLoginError(loginLang[userLang].emailNotFound);
+                        break;
+                    case 'verification':
+                        setLoginError(loginLang[userLang].notVerified);
+                        break;
+                    case 'pw':
+                        setLoginError(loginLang[userLang].wrongPw);
+                        break;
+                }
+
                 return setShowError(true);
             }
 
-            console.log(loginAttempt.data.loginError);
             dispatch(setSessionUser(loginAttempt.data.userData));
-            dispatch(setLanguage(loginAttempt.data.userData.language))
+            dispatch(setLanguage(loginAttempt.data.userData.language));
+            Cookies.set('seedsLanguage', loginAttempt.data.userData.language);
             setLoading(false);
             Router.push('/');
         } catch (error) {

@@ -7,6 +7,9 @@ import SeedButton from '../../../components/UI/SeedsButton/SeedButton';
 import styles from './verify.module.css'
 import Axios from 'axios';
 import { CircularProgress } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import stateInterface from '../../../interfaces/stateInterface';
+import verifyUserLang from '../../../util/language/pages/verify-user';
 
 interface Props {
     userIdProp: string;
@@ -23,6 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 }
 
 const VerifyUser: React.FC<Props> = ({userIdProp}) => {
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [loading, setLoading] = useState(false);
     const [verificationDone, setVerificationDone] = useState(false);
     const [verificationError, setVerificationError] = useState(false);
@@ -50,16 +54,16 @@ const VerifyUser: React.FC<Props> = ({userIdProp}) => {
     })
 
     return<>
-        <Layout title="Verify user | Seeds">
+        <Layout title={verifyUserLang[userLang].pageTitle}>
             <div className={styles.Verify}>
                 {verificationDone ? (
                     <Fragment>
-                        <SeedsHeader text="Wohooo!" />
+                        <SeedsHeader text={verifyUserLang[userLang].hdr} />
                         <p>
-                            Your registration is completed! Now you're one of us.
+                            {verifyUserLang[userLang].txt}
                         </p>
                         <SeedButton
-                            text="go sign me in"
+                            text={verifyUserLang[userLang].btn}
                             image={false}
                             click={() => Router.push('/login')}
                         />
@@ -68,12 +72,12 @@ const VerifyUser: React.FC<Props> = ({userIdProp}) => {
 
                 {verificationError ? (
                     <Fragment>
-                        <SeedsHeader text="Verification failed... :(" />
+                        <SeedsHeader text={verifyUserLang[userLang].errHdr} />
                         <p>
-                            Something didn't quite work out. We're sorry about this. Try seeing if your account has already been verified.
+                            {verifyUserLang[userLang].errTxt}
                         </p>
                         <SeedButton
-                            text="go sign me in"
+                            text={verifyUserLang[userLang].errBtn}
                             image={false}
                             click={() => Router.push('/login')}
                         />

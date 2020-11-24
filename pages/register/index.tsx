@@ -112,7 +112,8 @@ class Register extends Component<Props> {
         const userData = {
             name: this.state.newUser.name.value,
             email: this.state.newUser.email.value,
-            password: this.state.newUser.password.value
+            password: this.state.newUser.password.value,
+            lang: this.props.userLang
         }
         const stringifiedUser = JSON.stringify(userData);
         console.log(stringifiedUser);

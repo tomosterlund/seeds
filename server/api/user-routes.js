@@ -9,11 +9,16 @@ const uploadImage = require('./../util/uploadImage');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID);
 const deleteMedia = require('./../util/deleteMedia');
+const registrationEmailTemplate = require('./../util/emailLanguage/registration-language');
+const newEmailTemplate = require('./../util/emailLanguage/new-email');
+const resetPasswordTemplate = require('./../util/emailLanguage/reset-password');
+const shortid = require('shortid');
 
 router.post('/c-api/register', uploadImage(), async (req, res) => {
     const userData = JSON.parse(req.body.userData);
     const name = userData.name;
     const email = userData.email;
+    const lang = userData.lang;
     const userType = 'creator';
     const premiumUser = false;
     const verified = false;
@@ -25,20 +30,23 @@ router.post('/c-api/register', uploadImage(), async (req, res) => {
         // Password encryption
         const password = await bcrypt.hash(userData.password, 10);
         const newUser = new User({
-            name,
-            email,
-            password,
-            imageUrl,
-            userType,
-            premiumUser,
-            verified
+            name: name,
+            email: email,
+            password: password,
+            imageUrl: imageUrl,
+            userType: userType,
+            premiumUser: premiumUser,
+            verified: verified,
+            language: lang
         });
         const savedUser = await newUser.save();
+
+        const emailTemplate = registrationEmailTemplate(lang);
 
         const msg = {
             to: email, // Change to your recipient
             from: 'tom.osterlund1@gmail.com', // Change to your verified sender
-            template_id: 'd-ffccbf1aa6c44b41a4259b7b47037506',
+            template_id: emailTemplate,
             dynamic_template_data: {
                 name: `${name}`,
                 _id: String(savedUser._id)
@@ -64,7 +72,7 @@ router.post('/c-api/register', uploadImage(), async (req, res) => {
 router.post('/c-api/verify/:userId', async (req, res) => {
     const userId = req.params.userId;
     try {
-        const user = await User.findById(userId);
+        let user = await User.findById(userId);
         user.verified = true;
         await user.save();
         res.json({ success: true });
@@ -86,18 +94,28 @@ router.post('/c-api/login', async (req, res) => {
             language: 1
         }).lean();
 
+        const TTLdoc = await TTLdata.findOne({ userEmail: email });
+        if (TTLdoc) {
+            if (TTLdoc.newPassword === password) {
+                req.session.user = user;
+                return res.json({ loginError: false, userData: req.session.user });
+            }
+        }
+
+        if (TTLdoc)
+
         if (!user) {
-            return res.json({ loginError: 'No user with such an e-mail' });
+            return res.json({ loginError: 'email' });
         }
 
         
         if (!user.verified) {
-            return res.json({ loginError: 'Oops! This account has not yet been verified. Check your email for further instructions.' })
+            return res.json({ loginError: 'verification' })
         }
 
         const passwordCheck = await bcrypt.compare(password, user.password);
         if (!passwordCheck) {
-            return res.json({ loginError: 'The password you entered is incorrect' });
+            return res.json({ loginError: 'pw' });
         }
 
         req.session.user = user;
@@ -158,10 +176,12 @@ router.post('/c-api/edit-user/:userId', uploadImage(), async (req, res) => {
             });
             await newTTLdoc.save();
 
+            const emailTemplate = newEmailTemplate(user.language);
+
             const msg = {
                 to: userData.email, // Change to your recipient
                 from: 'tom.osterlund1@gmail.com', // Change to your verified sender
-                template_id: 'd-450bcdf6f641480087c0a8c9393b49fb',
+                template_id: emailTemplate,
                 dynamic_template_data: {
                     userid: `${user._id}`
                 },
@@ -213,6 +233,49 @@ router.get('/c-api/verify-new-email/:userId', async (req, res) => {
         }
 
         return res.json({ queryResult: 'No user found', updateWorked: false });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/c-api/reset-password', async (req, res) => {
+    const email = req.body.email;
+    const rdmStr = shortid.generate();
+    const user = await User.findOne({ email: email }).lean();
+
+    if (!user) {
+        return res.json({ error: 'Did not find a user with this email' });
+    }
+
+    try {
+        const newTTLdoc = new TTLdata({
+            newPassword: rdmStr,
+            userEmail: email
+        })
+        const postedTTL = await newTTLdoc.save();
+        console.log(postedTTL);
+
+        const emailTemplate = resetPasswordTemplate(user.language);
+
+        const msg = {
+            to: email,
+            from: 'tom.osterlund1@gmail.com',
+            template_id: emailTemplate,
+            dynamic_template_data: {
+                name: `${user.name}`,
+                newpassword: rdmStr
+            },
+        }
+        sgMail
+            .send(msg)
+            .then(() => {
+                console.log('Email sent')
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+
+        res.json({ TTLdocCreated: true });
     } catch (error) {
         console.log(error);
     }

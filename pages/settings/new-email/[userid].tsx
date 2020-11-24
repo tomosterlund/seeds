@@ -7,6 +7,9 @@ import Router from 'next/router'
 import { GetServerSideProps } from 'next'
 import Axios from 'axios'
 import { CircularProgress } from '@material-ui/core'
+import { useSelector } from 'react-redux'
+import stateInterface from '../../../interfaces/stateInterface'
+import newEmailLang from '../../../util/language/user/new-email'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
@@ -25,6 +28,7 @@ interface Props {
 
 const NewEmail: React.FC<Props> = ({ userId }) => {
 
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [success, setSuccess] = useState(false);
     const [ranOnce, setRanOnce] = useState(false);
 
@@ -32,26 +36,26 @@ const NewEmail: React.FC<Props> = ({ userId }) => {
         const verifyEmail = async () => {
             const verified = await Axios.get(`/c-api/verify-new-email/${userId}`);
             console.log(verified);
-            setRanOnce(true);
-            return setSuccess(verified.data.updateWorked);
+            setSuccess(verified.data.updateWorked);
+            return setRanOnce(true);
         }
 
         if (!ranOnce) {
             verifyEmail()
         }
-    })
+    }, [])
 
     return <>
-        <Layout title="Confirm new email | Seeds">
+        <Layout title={newEmailLang[userLang].pageTitle}>
             <div className={styles.NewEmailPage}>
-                {ranOnce ? (
+                {ranOnce && success ? (
                     <Fragment>
-                        <SeedsHeader text="All done!" />
+                        <SeedsHeader text={newEmailLang[userLang].hdr} />
                         <p>
-                            Your new email address has been verified. Thanks for keeping us in the loop!
+                            {newEmailLang[userLang].txt}
                         </p>
                         <SeedButton
-                            text="take me someplace better"
+                            text={newEmailLang[userLang].btn}
                             image={false}
                             click={() => Router.push('/')}
                         />
@@ -61,7 +65,7 @@ const NewEmail: React.FC<Props> = ({ userId }) => {
                 )}
 
                 {!success && ranOnce ? (
-                    <h2>Something went wrong :/</h2>
+                    <h2>{newEmailLang[userLang].err}</h2>
                 ) : null}
             </div>
         </Layout>

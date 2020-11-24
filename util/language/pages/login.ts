@@ -11,6 +11,9 @@ const loginLang = {
         Btn: 'enter',
         errorHdr: 'Login failed',
         errorOk: 'ok',
+        emailNotFound: 'No user with such an e-mail',
+        notVerified: 'Oops! This account has not yet been verified. Check your email for further instructions.',
+        wrongPw: 'The password you entered is incorrect'
     },
     deutsch: {
         pageTitle: 'Anmelden | Seeds',
@@ -24,6 +27,9 @@ const loginLang = {
         Btn: 'anmelden',
         errorHdr: 'Anmeldung fehlgeschlagen',
         errorOk: 'ok',
+        emailNotFound: 'Es existiert kein Benutzer mit diesem Email.',
+        notVerified: 'Hoppla! Diese Konto wurde noch nicht verifiziert. Schau bitte in deinem Email rein.',
+        wrongPw: 'Falsches Passwort'
     }
 }
 
