@@ -3,7 +3,7 @@ import styles from './Backdrop.module.css'
 
 interface Props {
     show: Boolean;
-    toggle: () => void;
+    toggle?: () => void;
 }
 
 const Backdrop: React.FC<Props> = ({ show, toggle }) => {

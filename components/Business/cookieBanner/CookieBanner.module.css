@@ -1,0 +1,18 @@
+.CookieBanner {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.CookieBanner p {
+    max-width: 500px;
+}
+
+.CookieBanner a {
+    color: blue;
+    text-decoration: underline;
+}

@@ -1,0 +1,19 @@
+.DataPolicyPage {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    padding: 8px;
+}
+
+.DataPolicyPage img {
+    width: 60px;
+}
+
+.DataPolicyPage p {
+    max-width: 600px;
+}
+
+.DataPolicyPage li {
+    max-width: 600px;
+}

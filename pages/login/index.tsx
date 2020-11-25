@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
 
             dispatch(setSessionUser(loginAttempt.data.userData));
             dispatch(setLanguage(loginAttempt.data.userData.language));
-            Cookies.set('seedsLanguage', loginAttempt.data.userData.language);
+            Cookies.set('seedsLanguage', loginAttempt.data.userData.language, { expires: 365 });
             setLoading(false);
             Router.push('/');
         } catch (error) {

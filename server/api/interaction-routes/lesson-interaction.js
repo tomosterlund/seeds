@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const LessonMessage = require('./../../Models/interaction/LessonMessage');
+const emailToCourseAuthor = require('./emailToCourseAuthor');
 
 const getLessonMessages = async (lessonId) => {
     const lessonMessages = await LessonMessage
@@ -25,6 +26,9 @@ router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
             voters: []
         })
         await newMessaage.save();
+
+        emailToCourseAuthor(lessonId, user.name, user._id);
+
         const lessonMessages = await getLessonMessages(lessonId);
         res.json({
             postedMessage: true,
@@ -49,7 +53,6 @@ router.delete('/c-api/lesson-message/:messageId', async (req, res) => {
     const messageId = req.params.messageId;
     try {
         const deletedMessage = await LessonMessage.findByIdAndDelete(messageId);
-        console.log(deletedMessage);
         const lessonMessages = await getLessonMessages(deletedMessage.lessonId);
         res.json({ lessonMessages });
     } catch (error) {

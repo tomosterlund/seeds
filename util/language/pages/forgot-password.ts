@@ -8,7 +8,7 @@ const forgotPwLang = {
         emailPh: 'your@email.com',
         doneBtn: 'reset password',
         verificationHdr: 'Help is on the way!',
-        verificationTxt: 'Check your email',
+        verificationTxt: 'You\'ve been sent a temporary password. This password will work for the next 5 minutes. Please go to your email, sign in with the new password, and then go to your account settings for setting a new password.',
     },
     deutsch: {
         pageTitle: 'Passwort zurücksetzen',
@@ -19,7 +19,7 @@ const forgotPwLang = {
         emailPh: 'dein@email.com',
         doneBtn: 'Passwort zurücksetzen',
         verificationHdr: 'Hilfe ist auf dem weg!',
-        verificationTxt: 'Schau in deinem email rein',
+        verificationTxt: 'Dir wurde ein neues, vorübergehendes Passwort geschickt. Das Passwort ist nur 5 Minuten gültig. Melde dich mit diesem Passwort an, und danach kannst du ein neues Passwort setzen, unter "Meine Einstellungen".',
     }
 }
 

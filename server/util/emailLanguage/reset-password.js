@@ -6,7 +6,7 @@ const resetPasswordTemplate = (lang) => {
             emailTemplate = 'd-6b30d63a704245a1ba456d2aa4f0effd';
             break;
         case 'deutsch':
-            emailTemplate = '';
+            emailTemplate = 'd-3317d831d45441c99a02dd1f15c95a12';
             break;
         default:
             emailTemplate = 'd-6b30d63a704245a1ba456d2aa4f0effd';

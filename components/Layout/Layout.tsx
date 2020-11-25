@@ -6,6 +6,8 @@ import Header from './../Header/Header'
 import Sidedrawer from './../UI/Sidedrawer/Sidedrawer'
 import Backdrop from './../UI/Backdrop/Backdrop'
 import PageLoader from './../UI/PageLoader/PageLoader'
+import CookieBanner from '../Business/cookieBanner/CookieBanner'
+import Cookies from 'js-cookie'
 
 interface Props {
     children: ReactNode;
@@ -15,6 +17,8 @@ interface Props {
 const Layout: React.FC<Props> = ({ children, title }) => {
     const [showSidedrawer, setShowSidedrawer] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
+    const [showCookieModal, setShowCookieModal] = useState(false);
+    const seedsCookie = Cookies.get('seedsCookie');
 
     const toggleDrawer = () => {
         setShowSidedrawer(!showSidedrawer);
@@ -34,7 +38,19 @@ const Layout: React.FC<Props> = ({ children, title }) => {
         return () => {
           router.events.off('routeChangeStart', handleRouteChange);
         }
+    }, []);
+
+    useEffect(() => {
+        if (!seedsCookie) {
+            console.log('seedsCookie does not exists');
+            setShowCookieModal(true);
+        }
     }, [])
+
+    const acceptLegal = () => {
+        setShowCookieModal(false);
+        Cookies.set('seedsCookie', 'termsAccepted', { expires: 180 });
+    }
 
     return <>
         <div className={styles.FullScreen}>
@@ -56,7 +72,12 @@ const Layout: React.FC<Props> = ({ children, title }) => {
                 <main>
                     { children }
                 </main>
+
             </div>
+            <CookieBanner
+                show={showCookieModal}
+                accept={acceptLegal}
+            />
         </div>
     </>
 }
