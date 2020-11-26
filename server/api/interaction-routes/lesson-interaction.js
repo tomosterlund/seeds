@@ -12,6 +12,37 @@ const getLessonMessages = async (lessonId) => {
     return lessonMessages
 };
 
+const getMsgObjects = async (lessonId) => {
+    // GET all messages
+    const lessonMessages = await getLessonMessages(lessonId);
+    const lessonMsgsIds = []
+    for (let lm of lessonMessages) {
+        lessonMsgsIds.push(lm._id);
+    }
+
+    // GET all replies to the messages
+    const lessonReplies = await MessageReply
+        .find({ replyToMsg: [...lessonMsgsIds] })
+        .sort({ createdAt: 1 })
+        .lean();
+
+    // PUT together messages with their replies (try and do this in the aggregation framework?)
+    const msgs = [];
+    for (let lmsg of lessonMessages) {
+        let ms = {msg: undefined, replies: []}
+        ms.msg = lmsg;
+        for (let rpl of lessonReplies) {
+            if (lmsg._id == rpl.replyToMsg) {
+                console.log('found a relevant reply');
+                ms.replies.push(rpl);
+            }
+        }
+        msgs.push(ms);
+    }
+
+    return msgs;
+}
+
 const getReplies = async (replyToMsg) => {
     const replies = await MessageReply
         .find({ replyToMsg: replyToMsg })
@@ -38,7 +69,7 @@ router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
 
         emailToCourseAuthor(lessonId, user.name, user._id);
 
-        const lessonMessages = await getLessonMessages(lessonId);
+        const lessonMessages = await getMsgObjects(lessonId);
         res.json({
             postedMessage: true,
             lessonMessages: lessonMessages
@@ -51,8 +82,8 @@ router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
 router.get('/c-api/lesson-messages/:lessonId', async (req, res) => {
     const lessonId = req.params.lessonId;
     try {
-        const lessonMessages = await getLessonMessages(lessonId);
-        res.json({ lessonMessages });
+        const msgs = await getMsgObjects(lessonId);
+        res.json({ msgs });
     } catch (error) {
         console.log(error);
     }
@@ -62,7 +93,7 @@ router.delete('/c-api/lesson-message/:messageId', async (req, res) => {
     const messageId = req.params.messageId;
     try {
         const deletedMessage = await LessonMessage.findByIdAndDelete(messageId);
-        const lessonMessages = await getLessonMessages(deletedMessage.lessonId);
+        const lessonMessages = await getMsgObjects(deletedMessage.lessonId);
         res.json({ lessonMessages });
     } catch (error) {
         console.log(error);
@@ -71,6 +102,7 @@ router.delete('/c-api/lesson-message/:messageId', async (req, res) => {
 
 router.post('/c-api/reply-to-message/:messageId', async (req, res) => {
     const messageId = req.params.messageId;
+    console.log('hits endpoint: post reply');
     try {
         const newReply = new MessageReply({
             content: req.body.content,
@@ -81,10 +113,23 @@ router.post('/c-api/reply-to-message/:messageId', async (req, res) => {
             popularity: 0,
         });
         await newReply.save();
+        const msg = await LessonMessage.findById(messageId);
 
-        const updatedReplies = getReplies(messageId);
-        console.log(updatedReplies);
-        res.json({ postedReply: true });
+        const msgs = await getMsgObjects(msg.lessonId);
+        res.json({ postedReply: true, msgs: msgs });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+router.post('/c-api/delete-reply-to-message/:replyId', async (req, res) => {
+    const replyId = req.params.replyId;
+    const lessonId = req.body.lessonId;
+    try {
+        await MessageReply.findByIdAndDelete(replyId);
+        const msgs = await getMsgObjects(lessonId);
+        res.json({ msgs: msgs });
     } catch (error) {
         console.log(error);
     }

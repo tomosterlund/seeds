@@ -7,6 +7,7 @@ import LessonMessage from './LessonMessage';
 import { useSelector } from 'react-redux';
 import stateInterface from '../../../../../interfaces/stateInterface';
 import courseViewLang from '../../../../../util/language/pages/course-view';
+import { CircularProgress } from '@material-ui/core';
 
 interface Props {
     courseAuthorId: string;
@@ -16,17 +17,21 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
     const router = useRouter();
     const { lessonid } = router.query
     const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
+    const sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
 
     const [fetchedData, setFetchedData] = useState(false);
     const [message, setMessage] = useState('');
     const [lessonMessages, setLessonMessages] = useState();
+    const [loading, setLoading] = useState(false);
 
     const submitMessage = async () => {
+        setLoading(true);
         try {
             const postedMessage = await Axios.post(`/c-api/lesson-message/${lessonid}`, { message });
             console.log(postedMessage);
             setLessonMessages(postedMessage.data.lessonMessages);
             setMessage('');
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
@@ -42,12 +47,56 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
         }
     }
 
+    const sendReply = async (replyToMsg: string, replyText: string) => {
+        const postReply = await Axios.post(`/c-api/reply-to-message/${replyToMsg}`, {
+            content: replyText,
+        });
+        const msgs = postReply.data.msgs;
+        setLessonMessages(msgs);
+    }
+
+    const deleteReply = async (replyId: string) => {
+        try {
+            const msgs = await Axios.post(`/c-api/delete-reply-to-message/${replyId}`, {
+                lessonId: lessonid
+            });
+            setLessonMessages(msgs.data.msgs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const likeMessage = async (msgId: string) => {
+        try {
+            const msgs = await Axios.post(`/c-api/like-message/${msgId}`, {
+                voterId: sessionUser._id,
+                lessonId: lessonid
+            });
+            setLessonMessages(msgs.data.msgs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const unlikeMessage = async (msgId: string) => {
+        try {
+            const msgs = await Axios.post(`/c-api/unlike-message/${msgId}`, {
+                voterId: sessionUser._id,
+                lessonId: lessonid
+            });
+            setLessonMessages(msgs.data.msgs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         if (!fetchedData) {
             console.log('fetching data');
             const fetchMessages = async () => {
                 const ms = await Axios.get(`/c-api/lesson-messages/${lessonid}`);
-                setLessonMessages(ms.data.lessonMessages);
+                console.log(ms.data.msgs);
+                setLessonMessages(ms.data.msgs);
                 setFetchedData(true);
             }
             fetchMessages();
@@ -64,13 +113,15 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
                         value={message}
                         onChange={(event) => setMessage(event.target.value)}
                     />
-                    <div className={styles.TextareaButton}>
-                        <SeedButton
-                            click={submitMessage}
-                            text={courseViewLang[userLang].replyToLesson}
-                            image={false}
-                        />
-                    </div>
+                        <div className={styles.TextareaButton}>
+                            {!loading ? (
+                                <SeedButton
+                                    click={submitMessage}
+                                    text={courseViewLang[userLang].replyToLesson}
+                                    image={false}
+                                />
+                            ) : <CircularProgress style={{ margin: '0 0 0 32px' }} />}
+                        </div>
                 </div>
             </div>
 
@@ -79,7 +130,19 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
             </div>
 
             {lessonMessages ? lessonMessages.map((lm: any, i: number) => (
-                <LessonMessage courseAuthorId={courseAuthorId} deleteMessage={deleteMessage} key={i} message={lm} />
+                <div key={i}>
+                    <LessonMessage
+                        courseAuthorId={courseAuthorId}
+                        deleteMessage={deleteMessage}
+                        key={lessonMessages}
+                        message={lm.msg}
+                        replies={lm.replies}
+                        sendReplyAPI={sendReply}
+                        deleteReply={deleteReply}
+                        likeMessage={likeMessage}
+                        unlikeMessage={unlikeMessage}
+                    />
+                </div>
             )) : null}
 
         </div>

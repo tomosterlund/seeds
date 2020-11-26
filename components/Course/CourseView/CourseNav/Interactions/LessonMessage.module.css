@@ -26,6 +26,7 @@
     font-size: 14px;
     max-width: 85%;
     white-space: pre-wrap;
+    width: 100%;
 }
 
 .MessageHeader {
@@ -68,14 +69,16 @@
 }
 
 .InteractionOpts button {
+    display: flex;
+    align-items: center;
     outline: none;
     border: 0;
     font-family: inherit;
     background-color: inherit;
-    color: #2929e9;
     margin: 0 8px;
     padding: 6px;
     cursor: pointer;
+    position: relative;
 }
 
 .InteractionOpts button:hover {

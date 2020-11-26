@@ -98,8 +98,6 @@ router.post('/c-api/login', async (req, res) => {
             }
         }
 
-        if (TTLdoc)
-
         if (!user) {
             return res.json({ loginError: 'email' });
         }

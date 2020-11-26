@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import styles from './NavLessons.module.css'
 import sectionInterface from './../../../../../interfaces/sectionInterface'
 import lessonInterface from '../../../../../interfaces/lessonInterface'
@@ -11,7 +12,17 @@ interface Props {
 }
 
 const NavLessons: React.FC<Props> = ({ sections, goToLesson }) => {
+    const router = useRouter();
+    const { lessonid } = router.query;
+
     const [activeLesson, setActiveLesson] = useState('');
+
+    
+    useEffect(() => {
+        if (activeLesson === '') {
+            setActiveLesson(String(lessonid));
+        }
+    }, [])
 
     const lessonIcon = (lessonType: string) => {
         if (lessonType === 'video') {return <Movie fontSize="small" />}

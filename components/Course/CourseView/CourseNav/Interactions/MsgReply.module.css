@@ -1,0 +1,40 @@
+.MsgReply {
+    display: flex;
+    position: relative;
+    padding: 8px;
+}
+
+.ReplyBody {
+    margin: 0 0 0 32px;
+}
+
+.ReplyBody h3 {
+    font-size: 14px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ReplyBody p {
+    margin: 0;
+}
+
+.AuthorImage {
+    position: absolute;
+    left: 6px;
+    border-radius: 50%;
+    height: 28px;
+    width: 28px;
+    background-size: cover;
+}
+
+.MoreIcon {
+    transition: color 0.2s linear;
+    margin: 4px 0 0 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.MoreIcon:hover {
+    color: gray;
+}
