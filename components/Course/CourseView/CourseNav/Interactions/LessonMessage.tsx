@@ -27,6 +27,7 @@ interface Props {
 const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId }) => {
     const sessionUserId = useSelector((state: stateInterface ) => state.sessionReducer.sessionUser._id);
     const [messageOptions, setMessageOptions] = useState(false);
+    const [showTextfield, setShowTextfield] = useState(false);
 
     const DateFormat = (str: string) => {
         const monthNr = str.substring(5, 7);
@@ -47,7 +48,7 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                     <h4>{message.authorName}</h4>
                     {
                         sessionUserId === message.authorId || sessionUserId === courseAuthorId ? (
-                            <div onMouseOver={() => setMessageOptions(true)} className={styles.MoreIcon}>
+                            <div onClick={() => setMessageOptions(true)} className={styles.MoreIcon}>
                                 <MoreHoriz fontSize="small" />
                             </div>
                         ) : null
@@ -57,6 +58,25 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                     {DateFormat(message.createdAt)}
                 </p>
                 {message.content}
+
+                <div className={styles.InteractionOpts}>
+                    <button onClick={() => setShowTextfield(true)}>
+                        Antworten
+                    </button>
+                    <button>
+                        Mir gefällt's
+                    </button>
+                </div>
+
+                {showTextfield ? (
+                    <textarea
+                        cols={33}
+                        rows={3}
+                        onBlur={() => setShowTextfield(false)}
+                        // value={message}
+                        // onChange={(event) => setMessage(event.target.value)}
+                    />
+                ) : null}
 
                 {/* Message options */}
                 <div

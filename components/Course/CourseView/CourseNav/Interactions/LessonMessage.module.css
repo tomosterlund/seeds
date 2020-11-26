@@ -59,3 +59,27 @@
     font-weight: 600;
     margin: -4px 32px 6px 0;
 }
+
+.InteractionOpts {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin: 4px 0 0 0;
+}
+
+.InteractionOpts button {
+    outline: none;
+    border: 0;
+    font-family: inherit;
+    background-color: inherit;
+    color: #2929e9;
+    margin: 0 8px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.InteractionOpts button:hover {
+    background-color: rgb(185, 185, 190);
+    color: #2929e9;
+    border-radius: 5px;
+}

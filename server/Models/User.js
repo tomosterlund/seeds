@@ -14,14 +14,6 @@ const ContentCreatorSchema = new Schema({
         type: String,
         required: true
     },
-    userType: {
-        type: String,
-        required: true
-    },
-    premiumUser: {
-        type: Boolean,
-        required: true
-    },
     imageUrl: {
         type: String,
         required: true

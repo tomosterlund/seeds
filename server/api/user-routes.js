@@ -19,8 +19,6 @@ router.post('/c-api/register', uploadImage(), async (req, res) => {
     const name = userData.name;
     const email = userData.email;
     const lang = userData.lang;
-    const userType = 'creator';
-    const premiumUser = false;
     const verified = false;
     let imageUrl = 'randomuser.png';
     if (req.file) {
@@ -34,8 +32,6 @@ router.post('/c-api/register', uploadImage(), async (req, res) => {
             email: email,
             password: password,
             imageUrl: imageUrl,
-            userType: userType,
-            premiumUser: premiumUser,
             verified: verified,
             language: lang
         });

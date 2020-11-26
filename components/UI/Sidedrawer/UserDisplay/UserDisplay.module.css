@@ -30,7 +30,7 @@
 
 .UserOptions p {
     font-size: 13px;
-    color: rgb(41, 41, 233);
+    color: #2929e9;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease-out;

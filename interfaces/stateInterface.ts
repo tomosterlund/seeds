@@ -5,8 +5,6 @@ interface stateInterface {
             courses?: [],
             joinDate?: string,
             imageUrl: string,
-            userType: string,
-            premiumUser: boolean,
             name: string,
             email: string,
             password?: string,
