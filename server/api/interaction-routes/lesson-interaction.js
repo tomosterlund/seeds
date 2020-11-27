@@ -2,54 +2,9 @@ const express = require('express');
 const router = express.Router();
 const LessonMessage = require('./../../Models/interaction/LessonMessage');
 const MessageReply = require('./../../Models/interaction/MessageReplies');
-const emailToCourseAuthor = require('./emailToCourseAuthor');
-
-const getLessonMessages = async (lessonId) => {
-    const lessonMessages = await LessonMessage
-        .find({ lessonId: lessonId })
-        .sort({ createdAt: -1 })
-        .lean();
-    return lessonMessages
-};
-
-const getMsgObjects = async (lessonId) => {
-    // GET all messages
-    const lessonMessages = await getLessonMessages(lessonId);
-    const lessonMsgsIds = []
-    for (let lm of lessonMessages) {
-        lessonMsgsIds.push(lm._id);
-    }
-
-    // GET all replies to the messages
-    const lessonReplies = await MessageReply
-        .find({ replyToMsg: [...lessonMsgsIds] })
-        .sort({ createdAt: 1 })
-        .lean();
-
-    // PUT together messages with their replies (try and do this in the aggregation framework?)
-    const msgs = [];
-    for (let lmsg of lessonMessages) {
-        let ms = {msg: undefined, replies: []}
-        ms.msg = lmsg;
-        for (let rpl of lessonReplies) {
-            if (lmsg._id == rpl.replyToMsg) {
-                console.log('found a relevant reply');
-                ms.replies.push(rpl);
-            }
-        }
-        msgs.push(ms);
-    }
-
-    return msgs;
-}
-
-const getReplies = async (replyToMsg) => {
-    const replies = await MessageReply
-        .find({ replyToMsg: replyToMsg })
-        .sort({ createdAt: -1 })
-        .lean();
-    return replies
-}
+const emailToCourseAuthor = require('./interaction-util/emailToCourseAuthor');
+const getLessonPosts = require('./interaction-util/get-lesson-posts');
+const getMoreLessonPosts = require('./interaction-util/get-more-messages');
 
 router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
     const lessonId = req.params.lessonId;
@@ -69,10 +24,10 @@ router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
 
         emailToCourseAuthor(lessonId, user.name, user._id);
 
-        const lessonMessages = await getMsgObjects(lessonId);
+        const msgs = await getLessonPosts(lessonId);
         res.json({
             postedMessage: true,
-            lessonMessages: lessonMessages
+            lessonMessages: msgs
         });
     } catch (error) {
         console.log(error);
@@ -82,8 +37,26 @@ router.post('/c-api/lesson-message/:lessonId', async (req, res) => {
 router.get('/c-api/lesson-messages/:lessonId', async (req, res) => {
     const lessonId = req.params.lessonId;
     try {
-        const msgs = await getMsgObjects(lessonId);
-        res.json({ msgs });
+        const msgs = await getLessonPosts(lessonId);
+        res.json({ msgs: msgs });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// Is actually a GET
+router.post('/c-api/more-lesson-messages/:lessonId', async (req, res) => {
+    const lessonId = req.params.lessonId;
+    const currentLength = req.body.currentLength;
+    console.log(currentLength);
+    try {
+        const msgs = await getMoreLessonPosts(lessonId, currentLength);
+
+        if (!msgs) {
+            return res.json({ noreMore: true });
+        }
+
+        res.json({ msgs: msgs, noMore: false });
     } catch (error) {
         console.log(error);
     }
@@ -93,8 +66,8 @@ router.delete('/c-api/lesson-message/:messageId', async (req, res) => {
     const messageId = req.params.messageId;
     try {
         const deletedMessage = await LessonMessage.findByIdAndDelete(messageId);
-        const lessonMessages = await getMsgObjects(deletedMessage.lessonId);
-        res.json({ lessonMessages });
+        const msgs = await getLessonPosts(deletedMessage.lessonId);
+        res.json({ msgs: msgs });
     } catch (error) {
         console.log(error);
     }
@@ -115,7 +88,7 @@ router.post('/c-api/reply-to-message/:messageId', async (req, res) => {
         await newReply.save();
         const msg = await LessonMessage.findById(messageId);
 
-        const msgs = await getMsgObjects(msg.lessonId);
+        const msgs = await getLessonPosts(msg.lessonId);
         res.json({ postedReply: true, msgs: msgs });
     } catch (error) {
         console.log(error);
@@ -128,7 +101,7 @@ router.post('/c-api/delete-reply-to-message/:replyId', async (req, res) => {
     const lessonId = req.body.lessonId;
     try {
         await MessageReply.findByIdAndDelete(replyId);
-        const msgs = await getMsgObjects(lessonId);
+        const msgs = await getLessonPosts(lessonId);
         res.json({ msgs: msgs });
     } catch (error) {
         console.log(error);

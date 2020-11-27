@@ -5,17 +5,20 @@ import stateInterface from '../../../../../interfaces/stateInterface'
 import ModalMini from '../../../../UI/Modals/ModalMini/ModalMini'
 import styles from './MsgReply.module.css'
 import moreStyles from './../../../Editor/LessonItem/LessonOptions/LessonOptions.module.css'
+import muchStyles from './LessonMessage.module.css'
+import DateFormat from '../../../../../util/dates/date-tag'
 
 interface Props {
     content: string;
     authorName: string;
     authorImageUrl: string;
     authorId: string;
+    createdAt: string;
     deleteReply: (replyId: string) => void;
     _id: string;
 }
 
-const MsgReply: React.FC<Props> = ({ content, authorId, authorImageUrl, authorName, deleteReply, _id }) => {
+const MsgReply: React.FC<Props> = ({ content, authorId, authorImageUrl, authorName, deleteReply, _id, createdAt }) => {
 
     const sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
     const [canDelete, setCanDelete] = useState(false);
@@ -32,7 +35,10 @@ const MsgReply: React.FC<Props> = ({ content, authorId, authorImageUrl, authorNa
             <div style={{backgroundImage: `url('https://seeds-platform.s3.eu-central-1.amazonaws.com/${authorImageUrl}')`}} className={styles.AuthorImage} />
             <div className={styles.ReplyBody}>
                 <h3>
-                    {authorName} <span style={{ fontWeight: 'normal' }}>replied</span>
+                    {authorName}
+                    <p style={{ margin: '0 0 0 8px' }} className={muchStyles.TimeStamp}>
+                        {DateFormat(createdAt)}
+                    </p>
                     {canDelete ? (
                         <div onClick={() => setShowOpts(true)} className={styles.MoreIcon}>
                             <MoreHoriz fontSize="small" />

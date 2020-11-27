@@ -1,4 +1,4 @@
-import { Chat, Delete, MoreHoriz, ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons'
+import { Chat, Delete, ExpandLess, ExpandMore, MoreHoriz, ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import stateInterface from '../../../../../interfaces/stateInterface'
@@ -9,6 +9,7 @@ import SeedButton from '../../../../UI/SeedsButton/SeedButton'
 import { CircularProgress } from '@material-ui/core'
 import MsgReply from './MsgReply'
 import replyInterface from '../../../../../interfaces/interaction/replyInterface'
+import DateFormat from '../../../../../util/dates/date-tag'
 
 interface messageInterface {
     content: string;
@@ -40,15 +41,9 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
     const [loading, setLoading] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [votedAlready, setVotedAlready] = useState(false);
+    const [votedNow, setVotedNow] = useState(false);
     const [unlikeModal, setUnlikeModal] = useState(false);
-
-    const DateFormat = (str: string) => {
-        const monthNr = str.substring(5, 7);
-        const year = str.substring(0, 4);
-        const dateNr = str.substring(8, 10);
-        const monthsArr = ['nil', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        return `${monthsArr[monthNr]} ${dateNr}, ${year}`
-    }
+    const [showReplies, setShowReplies] = useState(false);
 
     const sendResponse = async () => {
         setLoading(true);
@@ -63,14 +58,23 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
     }
 
     const unlike = () => {
+        setVotedNow(true);
         setVotedAlready(false);
         unlikeMessage(message._id);
     }
 
+    const like = () => {
+        setVotedNow(true);
+        setVotedAlready(true);
+        likeMessage(message._id)
+    }
+
     useEffect(() => {
-        for (let id of message.voters) {
-            if (id == sessionUserId) {
-                setVotedAlready(true);
+        if (!votedNow) {
+            for (let id of message.voters) {
+                if (id == sessionUserId) {
+                    setVotedAlready(true);
+                }
             }
         }
     })
@@ -103,7 +107,7 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                     </button>
 
                     {!votedAlready ? (
-                        <button onClick={() => likeMessage(message._id)}>
+                        <button onClick={like}>
                             <ThumbUpAlt style={{ margin: '0 6px 0 0' }} fontSize="small" />
                             <span style={{ fontWeight: 'bold' }}>{message.popularity}</span>
                         </button>
@@ -131,31 +135,50 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                         />
 
                         {!loading ? (
-                            <div style={{margin: '-16px 0 0 -16px'}}>
+                            <div style={{margin: '-16px 0 0 -16px', display: 'flex', alignItems: 'center'}}>
                                 <SeedButton
                                     click={sendResponse}
                                     image={false}
                                     text="antworten"
+                                />
+
+                                <SeedButton
+                                    click={() => setShowTextfield(false)}
+                                    image={false}
+                                    text="abbrechen"
+                                    backgroundColor="red"
                                 />
                             </div>
                         ) : <CircularProgress style={{ margin: '32px 0 0 0' }} />}
                     </Fragment>
                 ) : null}
                 
-                {replies ? (
-                    <Fragment>
-                        {replies.map((r: replyInterface, i: number) => (
-                            <MsgReply 
-                                authorId={r.authorId}
-                                authorImageUrl={r.authorImageUrl}
-                                authorName={r.authorName}
-                                content={r.content}
-                                _id={r._id}
-                                key={i}
-                                deleteReply={deleteReply}
-                            />
-                        ))}
-                    </Fragment>
+                {replies.length > 0 ? (
+                    !showReplies ? (
+                        <button onClick={() => setShowReplies(true)} className={styles.ShowRepliesButton}>
+                            <ExpandMore fontSize="small" />
+                            Show replies 
+                        </button>
+                    ) : (
+                        <Fragment>
+                            <button onClick={() => setShowReplies(false)} className={styles.ShowRepliesButton}>
+                                <ExpandLess fontSize="small" />
+                                Hide replies
+                            </button>
+                            {replies.map((r: replyInterface, i: number) => (
+                                <MsgReply 
+                                    authorId={r.authorId}
+                                    authorImageUrl={r.authorImageUrl}
+                                    authorName={r.authorName}
+                                    content={r.content}
+                                    _id={r._id}
+                                    key={i}
+                                    deleteReply={deleteReply}
+                                    createdAt={r.createdAt}
+                                />
+                            ))}
+                        </Fragment>
+                    )
                 ) : null}
 
                 {/* Message options */}

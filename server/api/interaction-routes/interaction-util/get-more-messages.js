@@ -1,23 +1,31 @@
 const LessonMessage = require('./../../../Models/interaction/LessonMessage');
 const MessageReply = require('./../../../Models/interaction/MessageReplies');
 
-const getLessonMessages = async (lessonId) => {
+const getLessonMessages = async (lessonId, currentNr) => {
     const lessonMessages = await LessonMessage
         .find({ lessonId: lessonId })
         .sort({ createdAt: -1 })
+        .skip(currentNr)
         .limit(5)
         .lean();
+    
     return lessonMessages;
 };
 
-const getMsgObjects = async (lessonId) => {
+const getMsgObjects = async (lessonId, currentNr) => {
     // GET all messages
-    const lessonMessages = await getLessonMessages(lessonId);
+    const lessonMessages = await getLessonMessages(lessonId, currentNr);
+
+    if (lessonMessages.length < 1) {
+        return false;
+    }
 
     const lessonMsgsIds = []
     for (let lm of lessonMessages) {
         lessonMsgsIds.push(lm._id);
     }
+
+    let longerThanFive = lessonMessages.length >= 5;
 
     // GET all replies to the messages
     const lessonReplies = await MessageReply
@@ -38,6 +46,8 @@ const getMsgObjects = async (lessonId) => {
         }
         msgs.push(ms);
     }
+
+    console.log(msgs);
 
     return msgs;
 }

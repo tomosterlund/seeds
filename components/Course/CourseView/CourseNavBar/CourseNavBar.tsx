@@ -10,9 +10,9 @@ interface Props {
 const CourseNav: React.FC<Props> = ({ courseTitle, courseImageUrl }) => {
     return<>
         <div className={styles.CourseNav}>
-            <div className={styles.ArrowIconContainer}>
+            {/* <div className={styles.ArrowIconContainer}>
                 <KeyboardArrowLeft />
-            </div>
+            </div> */}
             <div className={styles.CourseDetailsContainer}>
                 <div
                     style={{backgroundImage: `url('https://seeds-platform.s3.eu-central-1.amazonaws.com/${courseImageUrl}')`}}
@@ -22,9 +22,9 @@ const CourseNav: React.FC<Props> = ({ courseTitle, courseImageUrl }) => {
                     {courseTitle}
                 </p>
             </div>
-            <div className={styles.ArrowIconContainer}>
+            {/* <div className={styles.ArrowIconContainer}>
                 <KeyboardArrowRight />
-            </div>
+            </div> */}
         </div>
     </>
 }

@@ -4,4 +4,5 @@ export default interface replyInterface {
     authorImageUrl: string;
     authorId: string;
     _id: string;
+    createdAt: string;
 }

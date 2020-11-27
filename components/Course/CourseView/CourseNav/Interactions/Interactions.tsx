@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import stateInterface from '../../../../../interfaces/stateInterface';
 import courseViewLang from '../../../../../util/language/pages/course-view';
 import { CircularProgress } from '@material-ui/core';
+import { PlusCircle } from 'react-bootstrap-icons';
 
 interface Props {
     courseAuthorId: string;
@@ -21,8 +22,9 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
 
     const [fetchedData, setFetchedData] = useState(false);
     const [message, setMessage] = useState('');
-    const [lessonMessages, setLessonMessages] = useState();
+    const [lessonMessages, setLessonMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showGetMore, setShowGetMore] = useState(true);
 
     const submitMessage = async () => {
         setLoading(true);
@@ -102,6 +104,26 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
             fetchMessages();
         }
     })
+
+    const getMoreMsgs = async () => {
+        const currentLength = lessonMessages.length;
+        try {
+            const moreMsgs = await Axios.post(`/c-api/more-lesson-messages/${lessonid}`, { currentLength });
+
+            if (moreMsgs.data.noMore) {
+                console.log('nore more');
+                return setShowGetMore(false);
+            }
+
+            console.log(moreMsgs.data.msgs);
+            const lsnMsgs = lessonMessages;
+            lsnMsgs.push(moreMsgs.data.msgs)
+            console.log(lsnMsgs);
+            setLessonMessages(lsnMsgs.flat());
+        } catch (error) {
+            console.log(error);
+        }
+    }
     
     return<>
         <div className={styles.Interactions}>
@@ -144,6 +166,14 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
                     />
                 </div>
             )) : null}
+
+            {lessonMessages.length > 0 && showGetMore ? (
+                <div onClick={getMoreMsgs} className={styles.MoreMessagesOpt}>
+                    <PlusCircle style={{ margin: '0 6px 0 0' }} />
+                    Load more comments
+                </div>
+            ) : null}
+
 
         </div>
     </>

@@ -86,3 +86,17 @@
     color: #2929e9;
     border-radius: 5px;
 }
+
+.ShowRepliesButton {
+    display: flex;
+    align-items: center;
+    outline: none;
+    border: 0;
+    background-color: lightgray;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.ShowRepliesButton:hover {
+    color: #2929e9;
+}

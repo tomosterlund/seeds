@@ -19,3 +19,14 @@
 .MessagesContainer {
     margin: 48px 0 0 0;
 }
+
+.MoreMessagesOpt {
+    display: flex;
+    align-items: center;
+    margin: 16px 0 16px 40px;
+}
+
+.MoreMessagesOpt:hover {
+    color: #2929e9;
+    cursor: pointer;
+}

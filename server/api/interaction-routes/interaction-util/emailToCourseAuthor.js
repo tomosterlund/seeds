@@ -1,8 +1,8 @@
-const Video = require('../../Models/lessons/Video');
-const Text = require('../../Models/lessons/Text');
-const Quiz = require('../../Models/lessons/Quiz');
-const EmailLimit = require('../../Models/TTLdata/emaillimit');
-const User = require('./../../Models/User');
+const Video = require('../../../Models/lessons/Video');
+const Text = require('../../../Models/lessons/Text');
+const Quiz = require('../../../Models/lessons/Quiz');
+const EmailLimit = require('../../../Models/TTLdata/emaillimit');
+const User = require('../../../Models/User');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID);
 
