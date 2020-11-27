@@ -8,6 +8,8 @@ const getLessonMessages = async (lessonId, currentNr) => {
         .skip(currentNr)
         .limit(5)
         .lean();
+    console.log(1);
+    console.log(lessonMessages);
     
     return lessonMessages;
 };
@@ -24,8 +26,6 @@ const getMsgObjects = async (lessonId, currentNr) => {
     for (let lm of lessonMessages) {
         lessonMsgsIds.push(lm._id);
     }
-
-    let longerThanFive = lessonMessages.length >= 5;
 
     // GET all replies to the messages
     const lessonReplies = await MessageReply

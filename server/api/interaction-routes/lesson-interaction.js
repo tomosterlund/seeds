@@ -53,7 +53,7 @@ router.post('/c-api/more-lesson-messages/:lessonId', async (req, res) => {
         const msgs = await getMoreLessonPosts(lessonId, currentLength);
 
         if (!msgs) {
-            return res.json({ noreMore: true });
+            return res.json({ noMore: true });
         }
 
         res.json({ msgs: msgs, noMore: false });

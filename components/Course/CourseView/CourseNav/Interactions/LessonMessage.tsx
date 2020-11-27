@@ -10,6 +10,7 @@ import { CircularProgress } from '@material-ui/core'
 import MsgReply from './MsgReply'
 import replyInterface from '../../../../../interfaces/interaction/replyInterface'
 import DateFormat from '../../../../../util/dates/date-tag'
+import interactionLang from '../../../../../util/language/pages/lesson-interaction'
 
 interface messageInterface {
     content: string;
@@ -44,6 +45,7 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
     const [votedNow, setVotedNow] = useState(false);
     const [unlikeModal, setUnlikeModal] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
 
     const sendResponse = async () => {
         setLoading(true);
@@ -118,7 +120,7 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                             <ModalMini show={unlikeModal} position="left">
                                 <div onClick={unlike} className={moreStyles.ModalListItem}>
                                     <ThumbDownAlt style={{ margin: '0 6px 0 0' }} fontSize="small" />
-                                    Undo like
+                                    {interactionLang[userLang].undoLike}
                                 </div>
                             </ModalMini>
                         </button>
@@ -139,13 +141,13 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                                 <SeedButton
                                     click={sendResponse}
                                     image={false}
-                                    text="antworten"
+                                    text={interactionLang[userLang].answer}
                                 />
 
                                 <SeedButton
                                     click={() => setShowTextfield(false)}
                                     image={false}
-                                    text="abbrechen"
+                                    text={interactionLang[userLang].cancel}
                                     backgroundColor="red"
                                 />
                             </div>
@@ -157,13 +159,13 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                     !showReplies ? (
                         <button onClick={() => setShowReplies(true)} className={styles.ShowRepliesButton}>
                             <ExpandMore fontSize="small" />
-                            Show replies 
+                            {interactionLang[userLang].showReplies}
                         </button>
                     ) : (
                         <Fragment>
                             <button onClick={() => setShowReplies(false)} className={styles.ShowRepliesButton}>
                                 <ExpandLess fontSize="small" />
-                                Hide replies
+                                {interactionLang[userLang].hideReplies}
                             </button>
                             {replies.map((r: replyInterface, i: number) => (
                                 <MsgReply 
@@ -195,7 +197,7 @@ const LessonMessage: React.FC<Props> = ({ message, deleteMessage, courseAuthorId
                             onClick={() => deleteMessage(message._id)}
                         >
                             <Delete />
-                            Delete message
+                            {interactionLang[userLang].deleteMsg}
                         </div>
 
                     </ModalMini>

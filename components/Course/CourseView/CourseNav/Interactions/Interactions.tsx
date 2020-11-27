@@ -9,6 +9,7 @@ import stateInterface from '../../../../../interfaces/stateInterface';
 import courseViewLang from '../../../../../util/language/pages/course-view';
 import { CircularProgress } from '@material-ui/core';
 import { PlusCircle } from 'react-bootstrap-icons';
+import interactionLang from '../../../../../util/language/pages/lesson-interaction';
 
 interface Props {
     courseAuthorId: string;
@@ -43,7 +44,7 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
         try {
             const deletedMessage = await Axios.delete(`/c-api/lesson-message/${messageId}`);
             console.log(deletedMessage);
-            setLessonMessages(deletedMessage.data.lessonMessages);
+            setLessonMessages(deletedMessage.data.msgs);
         } catch (error) {
             console.log(error);
         }
@@ -167,10 +168,10 @@ const Interactions: React.FC<Props> = ({ courseAuthorId }) => {
                 </div>
             )) : null}
 
-            {lessonMessages.length > 0 && showGetMore ? (
+            {lessonMessages.length >= 5 && showGetMore ? (
                 <div onClick={getMoreMsgs} className={styles.MoreMessagesOpt}>
                     <PlusCircle style={{ margin: '0 6px 0 0' }} />
-                    Load more comments
+                    {interactionLang[userLang].moreComments}
                 </div>
             ) : null}
 

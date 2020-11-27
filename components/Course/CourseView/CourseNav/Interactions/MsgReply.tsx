@@ -7,6 +7,7 @@ import styles from './MsgReply.module.css'
 import moreStyles from './../../../Editor/LessonItem/LessonOptions/LessonOptions.module.css'
 import muchStyles from './LessonMessage.module.css'
 import DateFormat from '../../../../../util/dates/date-tag'
+import interactionLang from '../../../../../util/language/pages/lesson-interaction'
 
 interface Props {
     content: string;
@@ -23,6 +24,7 @@ const MsgReply: React.FC<Props> = ({ content, authorId, authorImageUrl, authorNa
     const sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
     const [canDelete, setCanDelete] = useState(false);
     const [showOpts, setShowOpts] = useState(false);
+    const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
 
     useEffect(() => {
         if (sessionUser._id === authorId) {
@@ -55,7 +57,7 @@ const MsgReply: React.FC<Props> = ({ content, authorId, authorImageUrl, authorNa
                         onMouseLeave={() => setShowOpts(false)}
                     >
                         <Delete />
-                        Delete reply
+                        {interactionLang[userLang].deleteReply}
                     </div>
                 </ModalMini>
             </div>
