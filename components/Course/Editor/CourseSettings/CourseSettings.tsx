@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import SeedsHeader from "../../../Presentational/SeedsHeader/SeedsHeader";
 import ImageUploadButton from "../../../UI/Forms/ImageUploadButton/ImageUploadButton";
 import Textfield from "../../../UI/Forms/Textfield/Textfield";
@@ -10,12 +10,15 @@ import { CircularProgress } from "@material-ui/core";
 import stateInterface from "../../../../interfaces/stateInterface";
 import { connect } from "react-redux";
 import courseEditorLang from "../../../../util/language/pages/course-editor";
+import styles from './CourseSettings.module.css'
+import { WarningRounded } from "@material-ui/icons";
 
 interface Props {
     show: boolean;
     courseId: string;
     close: () => void;
     userLang: string;
+    sessionUserId: string;
 }
 
 interface State {
@@ -24,6 +27,7 @@ interface State {
     file: any;
     imagePreviewUrl: any;
     loading: boolean;
+    showDeleteWarning: boolean;
 }
 
 class CourseSettings extends Component<Props, State> {
@@ -38,7 +42,8 @@ class CourseSettings extends Component<Props, State> {
         selectedFile: null,
         file: '',
         imagePreviewUrl: '',
-        loading: false
+        loading: false,
+        showDeleteWarning: false
     }
 
     openFilePicker = () => {
@@ -69,6 +74,18 @@ class CourseSettings extends Component<Props, State> {
         const newState = this.state;
         newState[fieldName] = targetValue;
         this.setState({ ...newState });
+    }
+
+    deleteCourse = async () => {
+        this.setState({ loading: true });
+        try {
+            const deletedCourse = await axios.delete(`/c-api/course/${this.props.courseId}`);
+            console.log(deletedCourse);
+            this.setState({ loading: false });
+            Router.push(`/my-courses/${this.props.sessionUserId}`);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     saveChanges = async () => {
@@ -107,17 +124,62 @@ class CourseSettings extends Component<Props, State> {
                 />
                 <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
                 {!this.state.loading ? (
-                    <SeedButton click={this.saveChanges} text={courseEditorLang[this.props.userLang].saveCourseEdits} image={false} />
+                    <div className={styles.ButtonContainer}>
+                        <SeedButton
+                            click={this.saveChanges}
+                            text={courseEditorLang[this.props.userLang].saveCourseEdits}
+                            image={false}
+                        />
+
+                        {!this.state.showDeleteWarning ? (
+                            <SeedButton
+                                click={() => this.setState({ showDeleteWarning: true })}
+                                text={courseEditorLang[this.props.userLang].deleteCourse}
+                                image={false}
+                                backgroundColor="red"
+                            />
+                        ) : null}
+                    </div>
                 ) : (
                     <CircularProgress style={{ margin: '8px 0 0 0' }} />
                 )}
+
+                {this.state.showDeleteWarning ? (
+                    <Fragment>
+                        <div className={styles.WarningHdrContainer}>
+                            <WarningRounded fontSize="small" />
+                            <h3>
+                                {courseEditorLang[this.props.userLang].deleteWarningHdr}
+                            </h3>
+                            
+                        </div>
+
+                        <p>
+                            {courseEditorLang[this.props.userLang].deleteWarningTxt}
+                        </p>
+
+                        <SeedButton
+                            text={courseEditorLang[this.props.userLang].cancelCourseDeletion}
+                            image={false}
+                            click={() => this.setState({ showDeleteWarning: false })}
+                        />
+
+                        <SeedButton
+                            text={courseEditorLang[this.props.userLang].deleteWarningBtn}
+                            image={false}
+                            backgroundColor="red"
+                            click={this.deleteCourse}
+                        />
+                    </Fragment>
+                ) : null}
             </ModalLarge>
         </>
     }
 }
 
 const mapStateToProps = (state: stateInterface) => ({
-    userLang: state.languageReducer.language
+    userLang: state.languageReducer.language,
+    sessionUserId: state.sessionReducer._id
 })
 
 export default connect(mapStateToProps)(CourseSettings);

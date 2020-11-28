@@ -6,7 +6,13 @@ const createCourseLang = {
         titlePh: 'Enter the title of the course here',
         categoryField: 'Category',
         uploadText: 'Course image',
-        button: 'create course'
+        button: 'create course',
+        fileErrorHdr: 'File type not supported',
+        fileErrorTxt: 'You can upload images with the following formats',
+        fileErrorBtn: 'ok, got it!',
+        validationHdr: 'Whoops!',
+        validationErr: 'Looks like you forgot to enter a course title',
+        validationErrBtn: 'ok'
     },
     deutsch: {
         pageTitle: 'Kurs erstellen | Seeds',
@@ -15,7 +21,13 @@ const createCourseLang = {
         titlePh: 'Kurstitel eingeben',
         categoryField: 'Fach',
         uploadText: 'bild hochladen',
-        button: 'kurs erstellen'
+        button: 'kurs erstellen',
+        fileErrorHdr: 'Dateityp nicht unterstützt',
+        fileErrorTxt: 'Du kannst Dateien in den folgenden Formate hochladen',
+        fileErrorBtn: 'ok, schon kapiert!',
+        validationHdr: 'Whoops!',
+        validationErr: 'Nicht zu vergessen - dein Kurs braucht ein Titel.',
+        validationErrBtn: 'ok'
     }
 }
 

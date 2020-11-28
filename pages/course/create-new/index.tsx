@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react'
+import React, { Component, createRef, Fragment } from 'react'
 import Router from 'next/router'
 import Layout from './../../../components/Layout/Layout'
 import styles from './CreateCourse.module.css'
@@ -12,6 +12,11 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import stateInterface from '../../../interfaces/stateInterface'
 import createCourseLang from '../../../util/language/course-editor/create-course'
+import { checkFileFormat } from '../../../util/form-validation/file-format'
+import { ErrorRounded } from '@material-ui/icons'
+import validateForm from './validateForm'
+import ModalNormal from '../../../components/UI/Modals/ModalNormal/ModalNormal'
+import Backdrop from '../../../components/UI/Backdrop/Backdrop'
 
 interface Props {
     userLang: string;
@@ -23,6 +28,8 @@ interface State {
     file: any;
     imagePreviewUrl: any;
     loading: boolean;
+    faultyFile: boolean;
+    invalidTitle: boolean;
 }
 
 class CreateCourse extends Component<Props, State> {
@@ -46,7 +53,9 @@ class CreateCourse extends Component<Props, State> {
         selectedFile: null,
         file: '',
         imagePreviewUrl: '',
-        loading: false
+        loading: false,
+        faultyFile: false,
+        invalidTitle: false
     }
 
     inputChangeHandler = (event, fieldName) => {
@@ -57,6 +66,12 @@ class CreateCourse extends Component<Props, State> {
 
     createCourseHandler = async (event) => {
         event.preventDefault();
+        const titleBool = validateForm(this.state.course.title.value);
+        if (!titleBool) {
+            console.log('faulty title');
+            return this.setState({ invalidTitle: true });
+        }
+
         this.setState({ loading: true });
         console.log('Created course');
         try {
@@ -82,20 +97,26 @@ class CreateCourse extends Component<Props, State> {
     getPhoto = e => {
         if (!e.target.files[0]) {return}
         e.preventDefault();
-
+        
         let reader = new FileReader();
         let file = e.target.files[0];
         console.log(file);
-
-        reader.onloadend = () => {
-          this.setState({
-            selectedFile: file,
-            file: file.name,
-            imagePreviewUrl: reader.result
-          });
+        
+        const fileCheck = checkFileFormat(file.name, ['jpg', 'png', 'gif']);
+        if (!fileCheck) {
+            return this.setState({ faultyFile: true });
         }
 
+        reader.onloadend = () => {
+            this.setState({
+                selectedFile: file,
+                file: file.name,
+                imagePreviewUrl: reader.result
+            });
+        }
+        
         reader.readAsDataURL(file);
+
     }
 
     render() {
@@ -103,31 +124,80 @@ class CreateCourse extends Component<Props, State> {
             <Layout title={createCourseLang[this.props.userLang].pageTitle}>
                 <div className={styles.CreateCoursePage}>
                     <SeedsHeader text={createCourseLang[this.props.userLang].header} />
-                    <form className={styles.Form} onSubmit={this.createCourseHandler}>
-                        <TextField
-                        inputValue={this.state.course.title.value}
-                        placeholder={createCourseLang[this.props.userLang].titlePh}
-                        label={createCourseLang[this.props.userLang].titleField}
-                        fieldName="title"
-                        inputType="text"
-                        changeHandler={this.inputChangeHandler}
-                        />
-                        <Select
-                        inputValue={this.state.course.category.value}
-                        label={createCourseLang[this.props.userLang].categoryField}
-                        changeHandler={this.inputChangeHandler}
-                        fieldName="category"
-                        />
-                        <ImageUploadButton camera={true} text={createCourseLang[this.props.userLang].uploadText} chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
-                        <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
-                        {
-                            !this.state.loading ? (
-                                <AppButton text={createCourseLang[this.props.userLang].button} image={false} />
-                            ) : <CircularProgress style={{ margin: '16px 0 0 0' }} />
-                        }
-                        
-                    </form>
+                    {!this.state.faultyFile ? (
+                        <form className={styles.Form} onSubmit={this.createCourseHandler}>
+                            <TextField
+                            inputValue={this.state.course.title.value}
+                            placeholder={createCourseLang[this.props.userLang].titlePh}
+                            label={createCourseLang[this.props.userLang].titleField}
+                            fieldName="title"
+                            inputType="text"
+                            changeHandler={this.inputChangeHandler}
+                            />
+                            <Select
+                            inputValue={this.state.course.category.value}
+                            label={createCourseLang[this.props.userLang].categoryField}
+                            changeHandler={this.inputChangeHandler}
+                            fieldName="category"
+                            />
+                            <ImageUploadButton camera={true} text={createCourseLang[this.props.userLang].uploadText} chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
+                            <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
+                            {
+                                !this.state.loading ? (
+                                    <AppButton text={createCourseLang[this.props.userLang].button} image={false} />
+                                ) : <CircularProgress style={{ margin: '16px 0 0 0' }} />
+                            }
+                            
+                        </form>
+                    ) : (
+                        // ERROR MESSAGE FOR INVALID FILE TYPE
+                        <div style={{ margin: '32px' }}>
+                            <div className={styles.ErrorHdrContainer}>
+                                <ErrorRounded fontSize="small" />
+                                <h3>
+                                    {createCourseLang[this.props.userLang].fileErrorHdr}
+                                </h3>
+                            </div>
+
+                            <p>
+                                {createCourseLang[this.props.userLang].fileErrorTxt}
+                            </p>
+
+                            <ul>
+                                <li>.png</li>
+                                <li>.jpg</li>
+                                <li>.gif</li>
+                            </ul>
+
+                            <AppButton
+                                text={createCourseLang[this.props.userLang].fileErrorBtn}
+                                image={false}
+                                click={() => this.setState({ faultyFile: false })}
+                            />
+                        </div>
+                    )}
                 </div>
+
+                {/* MODAL FOR INVALID TITLE */}
+                <ModalNormal show={this.state.invalidTitle}>
+                    <div className={styles.ErrorHdrContainer}>
+                        <ErrorRounded fontSize="small" />
+                        <h3>
+                            {createCourseLang[this.props.userLang].validationHdr}
+                        </h3>
+                    </div>
+
+                    <p>
+                        {createCourseLang[this.props.userLang].validationErr}
+                    </p>
+
+                    <AppButton
+                        text={createCourseLang[this.props.userLang].validationErrBtn}
+                        image={false}
+                        click={() => this.setState({invalidTitle: false})}
+                    />
+                </ModalNormal>
+                <Backdrop toggle={() => this.setState({invalidTitle: false})} show={this.state.invalidTitle} />
             </Layout>
         </>
     }

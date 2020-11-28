@@ -28,15 +28,15 @@ const CookieBanner: React.FC<Props> = ({ show, accept }) => {
 
                 <p>
                     {userLang === 'deutsch' ? (
-                        <p>
+                        <span>
                             Um unsere Webpage weiter zu benutzen, müssen Sie zuerst <Link href="/documents/de/datenschutz"><a target="_blank">diese Bedingungen</a></Link> zustimmen.
-                        </p>
+                        </span>
                     ) : null}
 
                     {userLang === 'english' ? (
-                        <p>
+                        <span>
                             If you want to use our service, you need to accept the terms stated in our data policy, which can be found&nbsp;<Link href="/documents/en/data-policy"><a target="_blank">here.</a></Link>
-                        </p>
+                        </span>
                     ) : null}
                 </p>
                 <SeedButton

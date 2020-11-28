@@ -1,7 +1,13 @@
 export const isLongerThan = (str: string, minNum: number): boolean => {
+    const trimmedStr = str.trim();
+    if (trimmedStr === '') {
+        return false;
+    }
+    
     if (str.length >= minNum) {
         return true;
     }
+
     return false;
 }
 

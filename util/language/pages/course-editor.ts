@@ -60,7 +60,12 @@ const courseEditorLang = {
         changeImage: 'Change image',
         saveCourseEdits: 'save changes',
         editCourseTitle: 'Title',
-        editCourseTitlePh: 'Enter a course title'
+        editCourseTitlePh: 'Enter a course title',
+        deleteCourse: 'Delete course',
+        deleteWarningHdr: 'Are you sure you want to delete this course?',
+        deleteWarningTxt: 'This action can not be reversed. All data and its resources will be permanently deleted',
+        deleteWarningBtn: 'Yes, I\'m sure. Delete course',
+        cancelCourseDeletion: 'Whoa! No way. Keep the course'
     },
     deutsch: {
         pageTitle: 'Kurs bearbeiten | Seeds',
@@ -123,7 +128,12 @@ const courseEditorLang = {
         changeImage: 'Bild ändern',
         saveCourseEdits: 'fertig',
         editCourseTitle: 'Titel',
-        editCourseTitlePh: 'Neuer Kurstitel eingeben'
+        editCourseTitlePh: 'Neuer Kurstitel eingeben',
+        deleteCourse: 'Kurs löschen',
+        deleteWarningHdr: 'Sicher, dass du dein Kurs löschen möchtest?',
+        deleteWarningTxt: 'Diese Aktion kann nicht korrigiert werden. Alle Resursen und Dateien deines Kurses werden gelöscht.',
+        deleteWarningBtn: 'Ja, Kurs endgültig löschen',
+        cancelCourseDeletion: 'Whoa! Auf keinen Fall. Kurs behalten.'
     }
 }
 

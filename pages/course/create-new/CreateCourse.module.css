@@ -13,3 +13,12 @@
     margin: 16px 0 0 0;
     align-items: center;
 }
+
+.ErrorHdrContainer {
+    display: flex;
+    align-items: center;
+}
+
+.ErrorHdrContainer h3 {
+    margin: 0 0 0 6px;
+}

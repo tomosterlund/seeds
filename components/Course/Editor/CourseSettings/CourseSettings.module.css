@@ -1,0 +1,14 @@
+.ButtonContainer {
+    display: flex;
+    align-items: center;
+}
+
+.WarningHdrContainer {
+    display: flex;
+    align-items: center;
+}
+
+.WarningHdrContainer h3 {
+    font-size: 16px;
+    margin: 0 0 0 6px;
+}

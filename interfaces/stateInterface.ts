@@ -1,17 +1,7 @@
+import sessionUser from './userInterface'
+
 interface stateInterface {
-    sessionReducer: {
-        sessionUser: {
-            _id: string,
-            courses?: [],
-            joinDate?: string,
-            imageUrl: string,
-            name: string,
-            email: string,
-            password?: string,
-            __v: number,
-            language: string;
-        }
-    },
+    sessionReducer: sessionUser,
     showQuizEditor: {
         showQuizEditor: boolean,
         lessonId: string
