@@ -6,7 +6,7 @@ const legalDiscLang = {
     },
     deutsch: {
         hdr: 'Datenschutzerklärung',
-        txt1: 'Um Ihnen ein angenehmes Online-Erlebnis zu ermöglichen, setzen wir auf unserer Webseite Cookies ein. Durch das Weitersurfen auf Seeds erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen finden Sie hier, in unseren Datenschutzhinweisen.',
+        txt1: 'Um Ihnen ein angenehmes Online-Erlebnis zu ermöglichen, setzen wir auf unserer Webseite Cookies ein. Durch das Weitersurfen auf Seeds erklären Sie sich mit der Verwendung von Cookies einverstanden. Detaillierte Informationen finden Sie unten, in unseren Datenschutzhinweisen.',
         btn: 'Ich stimme zu'
     }
 }

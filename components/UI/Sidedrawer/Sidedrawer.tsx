@@ -89,7 +89,7 @@ const Sidedrawer: React.FC<Props> = ({ open, toggle }) => {
             },
             {
                 component: <Sliders />,
-                text: sidebarLang[sessionUser.language].accountSettings,
+                text: sidebarLang[userLang].accountSettings,
                 route: `/settings/${userId}`
             },
         ]

@@ -18,7 +18,7 @@ const Header: React.FC<Props> = ({ activeNavItem, toggleSidedrawer }) => {
 
     const [ranUseEffect, setRanUseEffect] = useState(false);
     const dispatch = useDispatch();
-    const sessionUser = useSelector((state: stateInterface) => state.sessionReducer.sessionUser);
+    const sessionUser = useSelector((state: stateInterface) => state.sessionReducer);
     const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
     const [showLanguageList, setShowLanguageList] = useState(false);
 

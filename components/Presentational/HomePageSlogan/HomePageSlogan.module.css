@@ -1,0 +1,14 @@
+.Green {
+    color: #13aa52;
+}
+
+.RoadToKnowledge {
+    width: 200px;
+    margin: 32px 0 0 0;
+}
+
+.SloganContainer {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}

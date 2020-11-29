@@ -1,122 +1,73 @@
-/* .container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
+.HomePage {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-flow: column;
   align-items: center;
 }
 
-.main {
-  padding: 5rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.footer {
-  width: 100%;
-  height: 100px;
-  border-top: 1px solid #eaeaea;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.footer img {
-  margin-left: 0.5rem;
-}
-
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
-}
-
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
-
-.title,
-.description {
-  text-align: center;
-}
-
-.description {
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin-top: 3rem;
-}
-
-.card {
-  margin: 1rem;
-  flex-basis: 45%;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
+.HomePage button {
+  outline: none;
   border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 17px;
+  font-family: inherit;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s linear;
+  border-radius: 3px;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+.PresentationBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-flow: column;
+  min-height: 50vh;
 }
 
-.card h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+.PresentationBox button {
+  color: #1d703f;
+  background-color: inherit;
+  border: 1px solid #1d703f;
 }
 
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
+.PresentationBox h4 {
+  margin: 16px 0;
 }
 
-.logo {
-  height: 1em;
+.BigGreenBox {
+  margin: 32px 0 0 0;
+  background-color: #13aa52;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  /* justify-content: space-around; */
+  width: 100vw;
+  height: 300px;
 }
 
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
-  }
-} */
+.BigGreenBox h2 {
+  color: white;
+  font-size: 30px;
+}
+
+.BigGreenBox .buttonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 95%;
+  max-width: 500px;
+  justify-content: space-evenly;
+}
+
+.BigGreenBox button {
+  background-color: inherit;
+  border: 1px solid white;
+  color: white;
+  margin: 16px;
+  width: 200px;
+}
+
+.HomePage button:hover {
+  /* font-size: 18px; */
+  transform: scale3d(1.03, 1.03, 1.03);
+}

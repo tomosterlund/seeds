@@ -1,4 +1,4 @@
-export default interface sessionUser {
+interface user {
     _id: string,
     courses?: [],
     joinDate?: string,
@@ -8,4 +8,8 @@ export default interface sessionUser {
     password?: string,
     __v: number,
     language: string;
+}
+
+export default interface sessionUser {
+    sessionUser: user
 }

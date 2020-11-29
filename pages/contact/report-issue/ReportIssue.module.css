@@ -1,0 +1,18 @@
+.ReportIssuesPage {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.PageHeader {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0;
+}
+
+.WarningIcon {
+    margin: 0 6px 0 0;
+}

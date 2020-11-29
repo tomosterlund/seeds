@@ -12,10 +12,12 @@ import { connect } from "react-redux";
 import courseEditorLang from "../../../../util/language/pages/course-editor";
 import styles from './CourseSettings.module.css'
 import { WarningRounded } from "@material-ui/icons";
+import { checkFileFormat } from "../../../../util/form-validation/file-format";
 
 interface Props {
     show: boolean;
     courseId: string;
+    title: string;
     close: () => void;
     userLang: string;
     sessionUserId: string;
@@ -28,6 +30,7 @@ interface State {
     imagePreviewUrl: any;
     loading: boolean;
     showDeleteWarning: boolean;
+    fileError: boolean;
 }
 
 class CourseSettings extends Component<Props, State> {
@@ -38,12 +41,13 @@ class CourseSettings extends Component<Props, State> {
     }
 
     state = {
-        courseTitle: '',
+        courseTitle: this.props.title,
         selectedFile: null,
         file: '',
         imagePreviewUrl: '',
         loading: false,
-        showDeleteWarning: false
+        showDeleteWarning: false,
+        fileError: false
     }
 
     openFilePicker = () => {
@@ -57,6 +61,11 @@ class CourseSettings extends Component<Props, State> {
         let reader = new FileReader();
         let file = e.target.files[0];
         console.log(file);
+
+        const fileOK = checkFileFormat(file.name, ['png', 'jpg', 'gif']);
+        if (!fileOK) {
+            return this.setState({ fileError: true });
+        }
 
         reader.onloadend = () => {
           this.setState({
@@ -107,71 +116,102 @@ class CourseSettings extends Component<Props, State> {
     render() {
         return<>
             <ModalLarge show={this.props.show}>
-                <SeedsHeader text={courseEditorLang[this.props.userLang].editCourseHdr} />
-                <Textfield
-                    label={courseEditorLang[this.props.userLang].editCourseTitle}
-                    placeholder={courseEditorLang[this.props.userLang].editCourseTitlePh}
-                    inputValue={this.state.courseTitle}
-                    inputType="text"
-                    changeHandler={this.textInputHandler}
-                    fieldName="courseTitle"
-                />
-                <ImageUploadButton
-                    openFileHandler={this.openFilePicker}
-                    text={courseEditorLang[this.props.userLang].changeImage}
-                    camera={true}
-                    chosenImage={this.state.file}
-                />
-                <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
-                {!this.state.loading ? (
-                    <div className={styles.ButtonContainer}>
-                        <SeedButton
-                            click={this.saveChanges}
-                            text={courseEditorLang[this.props.userLang].saveCourseEdits}
-                            image={false}
+
+                {!this.state.fileError ? (
+                    <Fragment>
+
+                        <SeedsHeader text={courseEditorLang[this.props.userLang].editCourseHdr} />
+                        <Textfield
+                            label={courseEditorLang[this.props.userLang].editCourseTitle}
+                            placeholder={courseEditorLang[this.props.userLang].editCourseTitlePh}
+                            inputValue={this.state.courseTitle}
+                            inputType="text"
+                            changeHandler={this.textInputHandler}
+                            fieldName="courseTitle"
                         />
-
-                        {!this.state.showDeleteWarning ? (
-                            <SeedButton
-                                click={() => this.setState({ showDeleteWarning: true })}
-                                text={courseEditorLang[this.props.userLang].deleteCourse}
-                                image={false}
-                                backgroundColor="red"
-                            />
+                        <ImageUploadButton
+                            openFileHandler={this.openFilePicker}
+                            text={courseEditorLang[this.props.userLang].changeImage}
+                            camera={true}
+                            chosenImage={this.state.file}
+                        />
+                        <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />
+                        {!this.state.loading ? (
+                            <div className={styles.ButtonContainer}>
+                                <SeedButton
+                                    click={this.saveChanges}
+                                    text={courseEditorLang[this.props.userLang].saveCourseEdits}
+                                    image={false}
+                                />
+        
+                                {!this.state.showDeleteWarning ? (
+                                    <SeedButton
+                                        click={() => this.setState({ showDeleteWarning: true })}
+                                        text={courseEditorLang[this.props.userLang].deleteCourse}
+                                        image={false}
+                                        backgroundColor="red"
+                                    />
+                                ) : null}
+                            </div>
+                        ) : (
+                            <CircularProgress style={{ margin: '8px 0 0 0' }} />
+                        )}
+        
+                        {this.state.showDeleteWarning ? (
+                            <Fragment>
+                                <div className={styles.WarningHdrContainer}>
+                                    <WarningRounded fontSize="small" />
+                                    <h3>
+                                        {courseEditorLang[this.props.userLang].deleteWarningHdr}
+                                    </h3>
+                                </div>
+        
+                                <p>
+                                    {courseEditorLang[this.props.userLang].deleteWarningTxt}
+                                </p>
+        
+                                <SeedButton
+                                    text={courseEditorLang[this.props.userLang].cancelCourseDeletion}
+                                    image={false}
+                                    click={() => this.setState({ showDeleteWarning: false })}
+                                />
+        
+                                <SeedButton
+                                    text={courseEditorLang[this.props.userLang].deleteWarningBtn}
+                                    image={false}
+                                    backgroundColor="red"
+                                    click={this.deleteCourse}
+                                />
+                            </Fragment>
                         ) : null}
-                    </div>
-                ) : (
-                    <CircularProgress style={{ margin: '8px 0 0 0' }} />
-                )}
 
-                {this.state.showDeleteWarning ? (
+                    </Fragment>
+                ) : (
                     <Fragment>
                         <div className={styles.WarningHdrContainer}>
                             <WarningRounded fontSize="small" />
                             <h3>
-                                {courseEditorLang[this.props.userLang].deleteWarningHdr}
+                                {courseEditorLang[this.props.userLang].errorHeader}
                             </h3>
-                            
                         </div>
 
                         <p>
-                            {courseEditorLang[this.props.userLang].deleteWarningTxt}
+                            {courseEditorLang[this.props.userLang].errorText}:
                         </p>
 
-                        <SeedButton
-                            text={courseEditorLang[this.props.userLang].cancelCourseDeletion}
-                            image={false}
-                            click={() => this.setState({ showDeleteWarning: false })}
-                        />
+                        <ul>
+                            <li>.png</li>
+                            <li>.jpg</li>
+                            <li>.gif</li>
+                        </ul>
 
                         <SeedButton
-                            text={courseEditorLang[this.props.userLang].deleteWarningBtn}
+                            text={courseEditorLang[this.props.userLang].gotitButton}
                             image={false}
-                            backgroundColor="red"
-                            click={this.deleteCourse}
+                            click={() => this.setState({ fileError: false })}
                         />
                     </Fragment>
-                ) : null}
+                )}
             </ModalLarge>
         </>
     }
@@ -179,7 +219,7 @@ class CourseSettings extends Component<Props, State> {
 
 const mapStateToProps = (state: stateInterface) => ({
     userLang: state.languageReducer.language,
-    sessionUserId: state.sessionReducer._id
+    sessionUserId: state.sessionReducer.sessionUser._id
 })
 
 export default connect(mapStateToProps)(CourseSettings);

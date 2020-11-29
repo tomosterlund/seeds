@@ -110,7 +110,7 @@ const CourseEditor: React.FC<CourseInterface> = (props) => {
             <AddText close={() => setShowAddText(false)} show={showAddText} courseId={props._id} sectionId={chosenSectionId} />
             <AddQuiz close={() => dispatch(hideQuizEditor())} show={showAddQuiz} courseId={props._id} sectionId={chosenSectionId} />
             <AddSection close={() => setShowAddSection(false)} show={showAddSection} courseId={props._id} />
-            <CourseSettings close={() => setShowSettings(false)} show={showSettings} courseId={props._id} />
+            <CourseSettings close={() => setShowSettings(false)} show={showSettings} courseId={props._id} title={props.title} />
             {
                 showAddVideo || showAddSection || showAddText || showAddQuiz || showSettings ? (
                     <Backdrop toggle={closeBackdrop} show={showAddVideo || showAddSection || showAddText || showAddQuiz || showSettings} />

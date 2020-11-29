@@ -21,7 +21,7 @@ const courseEditorLang = {
         doneButton: 'Upload video',
         progress: 'Uploading - just a moment',
         errorHeader: 'File type not supported',
-        errorText: 'You can upload videos with the following formats',
+        errorText: 'You can upload files with the following formats',
         gotitButton: 'ok, got it!',
         // Add text
         textHeader: 'Add text',
@@ -89,7 +89,7 @@ const courseEditorLang = {
         doneButton: 'video hochladen',
         progress: 'Video wird hochgeladen',
         errorHeader: 'Dateityp nicht unterstützt',
-        errorText: 'Du kannst Videos in den folgenden Dateiformate hochladen',
+        errorText: 'Du kannst Dateien in den folgenden Dateiformate hochladen',
         gotitButton: 'ok, schon kapiert!',
         // Add text
         textHeader: 'Text verfassen',

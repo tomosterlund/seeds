@@ -1,0 +1,49 @@
+.Footer {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.AltsColumn {
+    display: flex;
+    flex-flow: column;
+    margin: 8px 32px 0 8px;
+}
+
+.AltsColumn h5 {
+    margin: 4px 0;
+    padding: 0;
+}
+
+.AltsColumn ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.AltsColumn li {
+    margin: 8px 0px;
+    list-style: none;
+    font-size: 14px;
+    color: #0f7c90;
+    cursor: pointer;
+}
+
+.AltsColumn li:hover {
+    color: #0f333a;
+}
+
+.CopyrightStamp {
+    position: absolute;
+    right: 16px;
+    color: gray;
+    font-size: 14px;
+}
+
+@media (max-width: 490px) {
+    .CopyrightStamp {
+        position: static;
+    }
+}
