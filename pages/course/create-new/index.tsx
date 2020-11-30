@@ -46,7 +46,7 @@ class CreateCourse extends Component<Props, State> {
                 valid: false
             },
             category: {
-                value: 'languages',
+                value: createCourseLang[this.props.userLang].categoriesArr[0],
                 valid: false
             }
         },
@@ -127,18 +127,19 @@ class CreateCourse extends Component<Props, State> {
                     {!this.state.faultyFile ? (
                         <form className={styles.Form} onSubmit={this.createCourseHandler}>
                             <TextField
-                            inputValue={this.state.course.title.value}
-                            placeholder={createCourseLang[this.props.userLang].titlePh}
-                            label={createCourseLang[this.props.userLang].titleField}
-                            fieldName="title"
-                            inputType="text"
-                            changeHandler={this.inputChangeHandler}
+                                inputValue={this.state.course.title.value}
+                                placeholder={createCourseLang[this.props.userLang].titlePh}
+                                label={createCourseLang[this.props.userLang].titleField}
+                                fieldName="title"
+                                inputType="text"
+                                changeHandler={this.inputChangeHandler}
                             />
                             <Select
-                            inputValue={this.state.course.category.value}
-                            label={createCourseLang[this.props.userLang].categoryField}
-                            changeHandler={this.inputChangeHandler}
-                            fieldName="category"
+                                inputValue={this.state.course.category.value}
+                                label={createCourseLang[this.props.userLang].categoryField}
+                                changeHandler={this.inputChangeHandler}
+                                fieldName="category"
+                                optionsArr={createCourseLang[this.props.userLang].categoriesArr}
                             />
                             <ImageUploadButton camera={true} text={createCourseLang[this.props.userLang].uploadText} chosenImage={this.state.file} openFileHandler={this.openFilePicker} />
                             <input ref={this.fileInput} onChange={this.getPhoto} type="file" style={{ display: 'none' }} />

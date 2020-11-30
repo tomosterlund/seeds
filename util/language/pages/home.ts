@@ -9,7 +9,7 @@ const homePageLang = {
     },
     deutsch: {
         instructions: 'zeig mir wie es geht',
-        subjects: 'Subjects',
+        subjects: 'Fächer',
         maths: 'Mathe',
         english: 'englisch',
         music: 'musik',

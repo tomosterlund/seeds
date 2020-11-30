@@ -12,7 +12,8 @@ const createCourseLang = {
         fileErrorBtn: 'ok, got it!',
         validationHdr: 'Whoops!',
         validationErr: 'Looks like you forgot to enter a course title',
-        validationErrBtn: 'ok'
+        validationErrBtn: 'ok',
+        categoriesArr: ['english', 'maths', 'sports', 'latin', 'science', 'geography']
     },
     deutsch: {
         pageTitle: 'Kurs erstellen | Seeds',
@@ -27,7 +28,8 @@ const createCourseLang = {
         fileErrorBtn: 'ok, schon kapiert!',
         validationHdr: 'Whoops!',
         validationErr: 'Nicht zu vergessen - dein Kurs braucht ein Titel.',
-        validationErrBtn: 'ok'
+        validationErrBtn: 'ok',
+        categoriesArr: ['englisch', 'mathe', 'sport', 'latein', 'NaWi', 'GeWi']
     }
 }
 

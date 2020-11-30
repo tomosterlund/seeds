@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className={styles.CopyrightStamp}>
-                &#169; {year} Seeds GbR
+                &#169; {year} Seeds Education GbR
             </div>
 
         </div>

@@ -1,6 +1,5 @@
 .Footer {
-    width: 100%;
-    max-width: 1200px;
+    width: 100vw;
     display: flex;
     align-items: center;
     position: relative;
@@ -37,7 +36,7 @@
 
 .CopyrightStamp {
     position: absolute;
-    right: 16px;
+    right: 32px;
     color: gray;
     font-size: 14px;
 }

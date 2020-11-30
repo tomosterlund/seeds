@@ -3,6 +3,7 @@ const router = express.Router();
 const LessonMessage = require('./../../Models/interaction/LessonMessage');
 const MessageReply = require('./../../Models/interaction/MessageReplies');
 const emailToCourseAuthor = require('./interaction-util/emailToCourseAuthor');
+const emailToMessageAuthor = require('./interaction-util/emailToMessageAuthor');
 const getLessonPosts = require('./interaction-util/get-lesson-posts');
 const getMoreLessonPosts = require('./interaction-util/get-more-messages');
 
@@ -87,6 +88,8 @@ router.post('/c-api/reply-to-message/:messageId', async (req, res) => {
         });
         await newReply.save();
         const msg = await LessonMessage.findById(messageId);
+
+        await emailToMessageAuthor(messageId, req.session.user.name);
 
         const msgs = await getLessonPosts(msg.lessonId);
         res.json({ postedReply: true, msgs: msgs });

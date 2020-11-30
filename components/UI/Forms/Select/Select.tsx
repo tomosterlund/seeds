@@ -1,19 +1,26 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import stateInterface from '../../../../interfaces/stateInterface';
-import selectLang from '../../../../util/language/components/forms/select';
+import { capitalizeStr } from '../../../../util/stringTransformation/commonStringOps';
 import styles from './../Textfield/Textfield.module.css'
 
 interface Props {
     inputValue: string;
     label: string;
-    changeHandler: (event, fieldName) => void;
+    changeHandler: (event: any, fieldName: string) => void;
     fieldName: string;
+    optionsArr: string[];
 }
 
-const Select: React.FC<Props> = ({ inputValue, label, changeHandler, fieldName }) => {
+const Select: React.FC<Props> = ({ inputValue, label, changeHandler, fieldName, optionsArr }) => {
 
     const userLang = useSelector((state: stateInterface) => state.languageReducer.language);
+
+    const options = (optionsArr.map((o, i) => (
+        <option key={i} className={styles.Option} value={o}>
+            {capitalizeStr(o)}
+        </option>
+    )))
 
     return<>
         <div className={styles.TextfieldContainer}>
@@ -24,13 +31,7 @@ const Select: React.FC<Props> = ({ inputValue, label, changeHandler, fieldName }
             value={inputValue} 
             name="cars"
             >
-                <option value="languages">{selectLang[userLang].languages}</option>
-                <option value="maths">{selectLang[userLang].maths}</option>
-                <option value="science">{selectLang[userLang].science}</option>
-                <option value="geography">{selectLang[userLang].geography}</option>
-                <option value="music">{selectLang[userLang].music}</option>
-                <option value="sports">{selectLang[userLang].sports}</option>
-                <option value="other">{selectLang[userLang].other}</option>
+                {options}
             </select>
         </div>
     </>

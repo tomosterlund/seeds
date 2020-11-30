@@ -16,3 +16,13 @@
 .WarningIcon {
     margin: 0 6px 0 0;
 }
+
+.InputContainer {
+    margin: 8px 0 8px 0;
+    display: flex;
+    flex-flow: column;
+}
+
+.InputContainer textarea {
+    font-family: inherit;
+}
